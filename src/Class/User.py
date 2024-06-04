@@ -9,7 +9,7 @@ class User:
         self.employeeid = employeeid
 
     def get_role_from_employeeid(self):
-        connection = create_connection("localhost", "root", "Harshitha@555", "cafeteria")
+        connection = create_connection()
         query = f"SELECT RoleName FROM role WHERE RoleID = (SELECT roleID FROM user WHERE EmployeeID = '{self.employeeid}')"
         get_role = execute_read_query(connection, query)
         if get_role:
@@ -19,10 +19,13 @@ class User:
     def login(self, role):
         if role == "Admin":
             print("Welcome, Admin!")
+            return "Admin"
         elif role == "Chef":
             print("Welcome, Chef!")
+            return 'Chef'
         else:
             print("Welcome, Employee!")
+            return "Employee"
 
     @staticmethod
     def userinput():
@@ -32,13 +35,25 @@ class User:
 
     @staticmethod
     def verify_employee(name, employeeid):
-        connection = create_connection("localhost", "root", "Harshitha@555", "cafeteria")
+        connection = create_connection()
         query = f"SELECT UserID FROM user WHERE name='{name}' AND EmployeeID='{employeeid}'"
         user = execute_read_query(connection, query)
         return user != []
+    
+def run():
+    name, employeeid = User.userinput()
+    user = User(name, employeeid)
+    if User.verify_employee(name, employeeid):
+        role = user.get_role_from_employeeid()
+        if role:
+            return user.login(role),employeeid
+        else:
+            print("Role not found.")
+    else:
+        print("User not verified.")
 
 if __name__ == "__main__":
-    name, employeeid = User.userinput()
+    '''name, employeeid = User.userinput()
     user = User(name, employeeid)
     if User.verify_employee(name, employeeid):
         role = user.get_role_from_employeeid()
@@ -47,4 +62,5 @@ if __name__ == "__main__":
         else:
             print("Role not found.")
     else:
-        print("User not verified.")
+        print("User not verified.")'''
+    run()

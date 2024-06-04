@@ -27,6 +27,6 @@ def create_connection():
     return connection
 
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
 # Replace the parameters with your MySQL server details
-    connection = create_connection()
+connection = create_connection()
