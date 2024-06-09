@@ -18,7 +18,7 @@ class MenuSystem:
         elif role_name == 'Chef':
             self.chef_menu()
         elif role_name == 'Employee':
-            self.user_menu()
+            self.user_menu(EmployeeId)
         else:
             print("Invalid role!")
 
@@ -77,7 +77,7 @@ class MenuSystem:
             else:
                 print("Invalid choice!")
 
-    def user_menu(self):
+    def user_menu(self,EmployeeId):
         while True:
             print("User Menu:")
             print("1. View Menu")
@@ -90,7 +90,7 @@ class MenuSystem:
             elif choice == '2':
                 self.select_food_item()
             elif choice == '3':
-                self.give_feedback()
+                self.give_feedback(EmployeeId)
             elif choice == '4':
                 break
             else:
@@ -117,7 +117,7 @@ class MenuSystem:
         self.connection.commit()
         print("Food item selected.")
 
-    def give_feedback(self):
+    def give_feedback(self,EmployeeId):
         cursor = self.connection.cursor()
         cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (EmployeeId,))
         result = cursor.fetchone()
