@@ -1,10 +1,12 @@
 import os
 import sys
+from User import User,run
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SQLConnect import create_connection
 from User import run
 from Admin import Admin
 from chef import Chef
+
 
 class MenuSystem:
     def __init__(self, connection):
@@ -56,7 +58,8 @@ class MenuSystem:
             print("2. View Feedback")
             print("3. Generate Monthly Feedback Report")
             print("4. View Menu")
-            print("5. Exit")
+            print("5. send final menu for today")
+            print("6. Exit")
             chef = Chef(None, None, None, None, None)
             choice = input("Select an option: ")
             if choice == '1':
@@ -68,6 +71,8 @@ class MenuSystem:
             elif choice == '4':
                 self.view_menu()
             elif choice == '5':
+                chef.send_final_menu(self.connection)
+            elif choice == '6':
                 break
             else:
                 print("Invalid choice!")
@@ -127,9 +132,15 @@ class MenuSystem:
         self.connection.commit()
         print("Feedback submitted successfully.")
 
-# Example usage
-if __name__ == "__main__":
+def App_run():
     connection = create_connection()
     menu_system = MenuSystem(connection)
     role,EmployeeId=run()
     menu_system.display_menu(role,EmployeeId)
+
+if __name__ == "__main__":
+    App_run()
+    '''connection = create_connection()
+    menu_system = MenuSystem(connection)
+    role,EmployeeId=run()
+    menu_system.display_menu(role,EmployeeId)'''
