@@ -1,23 +1,35 @@
 import os
 import sys
+import random
+from datetime import datetime, timedelta
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SQLConnect import create_connection, execute_read_query
 
 class RecommendationEngine:
-    positive_words = [
-        "great", "loved", "perfect", "excellent", "good", "nice", "amazing", "wonderful",
-        "fantastic", "delicious", "tasty", "enjoyed", "love", "satisfying", "pleased", "awesome",
-        "yummy", "fresh", "savory", "delectable", "scrumptious", "flavorful", "appetizing", "pleasing"
-    ]
-
-    negative_words = [
-        "salty", "bad", "terrible", "not", "worst", "disgusting", "awful", "horrible", "unpleasant",
-        "nasty", "bland", "stale", "unappetizing", "gross", "mediocre", "overcooked", "undercooked",
-        "tasteless", "flavorless", "dislike", "hate", "poor", "boring", "greasy", "oily"
-    ]
-
-    def __init__(self, connection):
+    def __init__(self, connection, sentiment_words_file):
         self.connection = connection
+        base_dir = os.path.dirname(os.path.dirname(__file__))  # This navigates up to the `src` directory
+        sentiment_file_path = os.path.join(base_dir, 'Data', 'sentiment_words.txt')  # Path to the sentiment_words.txt
+        self.positive_words, self.negative_words = self.load_sentiment_words(sentiment_file_path)
+
+
+    def load_sentiment_words(self, sentiment_words_file):
+        positive_words = []
+        negative_words = []
+        with open(sentiment_words_file, 'r') as file:
+            lines = file.readlines()
+            current_list = None
+            for line in lines:
+                line = line.strip()
+                if line == "positive:":
+                    current_list = positive_words
+                elif line == "negative:":
+                    current_list = negative_words
+                elif line and current_list is not None:
+                    words = line.split(", ")
+                    current_list.extend(words)
+        return positive_words, negative_words
 
     def simple_sentiment_analysis(self, comment):
         comment_words = comment.lower().split()
@@ -29,25 +41,41 @@ class RecommendationEngine:
                 sentiment_score -= 1
         return sentiment_score
 
+    def categorize_sentiment(self, sentiment_score):
+        if sentiment_score > 0:
+            return "Positive"
+        elif sentiment_score < 0:
+            return "Negative"
+        else:
+            return "Neutral"
+
     def analyze_feedback(self, food_item_id):
-        query = f"SELECT Comment, Rating FROM feedback WHERE FoodItemID = {food_item_id}"
+        query = f"""
+        SELECT f.Comment, f.Rating, fi.ItemName
+        FROM feedback f
+        JOIN fooditem fi ON f.FoodItemID = fi.FoodItemID
+        WHERE f.FoodItemID = {food_item_id}
+        """
         feedbacks = execute_read_query(self.connection, query)
 
         total_rating = 0
         total_feedback = 0
         sentiment_score = 0
+        food_name = ""
 
-        for comment, rating in feedbacks:
+        for comment, rating, name in feedbacks:
             total_rating += rating
             total_feedback += 1
             sentiment_score += self.simple_sentiment_analysis(comment)
+            food_name = name  # All rows will have the same name for this food item
 
         average_rating = total_rating / total_feedback if total_feedback else 0
-        average_sentiment = sentiment_score / total_feedback if total_feedback else 0
+        average_sentiment_score = sentiment_score / total_feedback if total_feedback else 0
+        sentiment_category = self.categorize_sentiment(average_sentiment_score)
 
-        return average_rating, average_sentiment
+        return food_name, average_rating, sentiment_category
 
-    ''' @staticmethod
+    '''@staticmethod
     def generate_dummy_data(connection):
         cursor = connection.cursor()
 
@@ -113,14 +141,14 @@ if __name__ == "__main__":
     connection = create_connection()
 
     if connection:
-        engine = RecommendationEngine(connection)
-
+        sentiment_words_path = os.path.join(os.path.dirname(__file__), 'sentiment_words.txt')
+        engine = RecommendationEngine(connection, sentiment_words_path)
 
         # Analyze feedback for a specific food item
         food_item_id = 21
-        average_rating, average_sentiment = engine.analyze_feedback(food_item_id)
+        food_name,average_rating, sentiment_category = engine.analyze_feedback(food_item_id)
 
-        print(f"Average Rating for Food Item {food_item_id}: {average_rating}")
-        print(f"Average Sentiment for Food Item {food_item_id}: {average_sentiment}")
+        print(f"Average Rating for {food_name}: {average_rating}")
+        print(f"Sentiment for {food_name}: {sentiment_category}")
         
         connection.close()
