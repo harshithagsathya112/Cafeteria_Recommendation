@@ -6,6 +6,7 @@ from SQLConnect import create_connection
 from User import run
 from Admin import Admin
 from chef import Chef
+from datetime import datetime, timedelta;
 
 
 class MenuSystem:
@@ -108,14 +109,32 @@ class MenuSystem:
             print(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Available: {row[3]}, Lookup ID: {row[4]}")
 
     def select_food_item(self):
-        user_id = int(input("Enter your user ID: "))
-        food_item_id = int(input("Enter food item ID to select: "))
-        
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO menu (Date, MealType, FoodItemID) VALUES (CURDATE(), 'lunch', %s)", 
-                       (food_item_id,))
-        self.connection.commit()
-        print("Food item selected.")
+        Date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+    
+        # Query to get all food items for today along with their names and prices
+        query = """
+        SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType
+        FROM menu
+        JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
+        WHERE menu.Date = %s
+        """
+        cursor.execute(query, (Date,))
+        today_menu = cursor.fetchall()
+    
+        if today_menu:
+            print("Tomorrow's Menu choices:")
+            for item in today_menu:
+                print(f"Food Item ID: {item[0]}, Name: {item[1]}, Price: {item[2]}, Meal Type: {item[3]}")
+            food_item_id = int(input("Enter food item ID to select: "))
+            cursor.execute("UPDATE menu SET pollvote = pollvote + 1 WHERE Date = %s AND FoodItemID = %s", (Date, food_item_id))
+            self.connection.commit()
+            print("Food item selected.")
+        else:
+            print("No menu items rolled out today.")
+
+
+            
 
     def give_feedback(self,EmployeeId):
         cursor = self.connection.cursor()
