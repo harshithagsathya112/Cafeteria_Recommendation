@@ -1,87 +1,67 @@
 import socket
 import threading
-import mysql.connector
-from datetime import datetime
-import queue
+import sys
+import os
 
-# Database setup
-db_config = {
-    'user': "root",
-    'password': "Harshitha@555",
-    'host': 'localhost',
-    'database': "cafeteria"
-}
+# Add the Class directory to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
+from DisplayMenu import MenuSystem
+from SQLConnect import create_connection
 
-# Server setup
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('localhost', 12345))
-server_socket.listen(5)
-
-clients = []
-notification_queue = queue.Queue()
-
-def fetch_unread_notifications():
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    cursor.execute("SELECT NotificationID, Message FROM notification WHERE IsRead = 0")
-    notifications = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return notifications
-
-def mark_notifications_as_read(notification_ids):
-    conn = mysql.connector.connect(**db_config)
-    cursor = conn.cursor()
-    for notification_id in notification_ids:
-        cursor.execute("UPDATE notification SET IsRead = 1 WHERE NotificationID = %s", (notification_id,))
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-def handle_client(client_socket, addr):
-    print(f"Connection from {addr} has been established!")
-    clients.append(client_socket)
-
-    # Send unread notifications
-    notifications = fetch_unread_notifications()
-    notification_ids = []
-    for notification_id, message in notifications:
-        client_socket.send(message.encode())
-        notification_ids.append(notification_id)
-    
-    if notification_ids:
-        mark_notifications_as_read(notification_ids)
-
-    try:
-        while True:
-            message = client_socket.recv(1024).decode()
-            if message:
-                print(f"Received message from {addr}: {message}")
-                # Other message handling can be added here
-    except:
-        print(f"Connection from {addr} has been closed.")
-    finally:
-        clients.remove(client_socket)
-        client_socket.close()
-
-def broadcast_notifications():
+def handle_client(client_socket, menu_system):
     while True:
-        notification = notification_queue.get()
-        for client in clients:
-            try:
-                client.send(notification.encode())
-            except:
-                clients.remove(client)
-        notification_queue.task_done()
+        try:
+            # Receive a request from the client
+            request = client_socket.recv(1024).decode('utf-8')
+            if not request:
+                break
 
-print("Server started and listening on port 12345")
+            print(f"Received request: {request}")
 
-# Start the broadcast notification thread
-broadcast_thread = threading.Thread(target=broadcast_notifications)
-broadcast_thread.daemon = True
-broadcast_thread.start()
+            # Process the request
+            request_parts = request.split(",")
+            role_name = request_parts[0]
+            employee_id = int(request_parts[1])
+            command = request_parts[2] if len(request_parts) > 2 else None
+            args = request_parts[3:] if len(request_parts) > 3 else []
 
-while True:
-    client_socket, addr = server_socket.accept()
-    client_handler = threading.Thread(target=handle_client, args=(client_socket, addr))
-    client_handler.start()
+            if command:
+                if role_name == 'Admin':
+                    response = menu_system.execute_admin_command(command, args)
+                elif role_name == 'Chef':
+                    response = menu_system.execute_chef_command(command, args)
+                elif role_name == 'Employee':
+                    response = menu_system.execute_user_command(command, employee_id, args)
+                else:
+                    response = "Invalid role!"
+            else:
+                response = menu_system.display_menu(role_name, employee_id)
+
+            # Send a response back to the client
+            client_socket.send(response.encode('utf-8'))
+        except ConnectionResetError:
+            break
+        except Exception as e:
+            print(f"Error: {e}")
+            break
+
+    client_socket.close()
+
+def main():
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(("0.0.0.0", 9999))
+    server.listen(5)
+    print("Server listening on port 9999")
+
+    # Create a database connection
+    connection = create_connection()
+    menu_system = MenuSystem(connection)
+
+    while True:
+        client_socket, addr = server.accept()
+        print(f"Accepted connection from {addr}")
+        client_handler = threading.Thread(target=handle_client, args=(client_socket, menu_system))
+        client_handler.start()
+
+if __name__ == "__main__":
+    main()

@@ -1,101 +1,115 @@
 import os
 import sys
-from User import User,run
+from User import User, run
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SQLConnect import create_connection
-from User import run
 from Admin import Admin
 from chef import Chef
-from datetime import datetime, timedelta;
-
+from datetime import datetime, timedelta
 
 class MenuSystem:
     def __init__(self, connection):
         self.connection = connection
 
-    def display_menu(self, role_name,EmployeeId):
+    def display_menu(self, role_name, employee_id):
         if role_name == 'Admin':
-            self.admin_menu()
+            return self.admin_menu()
         elif role_name == 'Chef':
-            self.chef_menu()
+            return self.chef_menu()
         elif role_name == 'Employee':
-            self.user_menu(EmployeeId)
+            return self.user_menu(employee_id)
         else:
-            print("Invalid role!")
+            return "Invalid role!"
 
     def admin_menu(self):
-        while True:
-            print("Admin Menu:")
-            print("1. Add Menu Item")
-            print("2. Update Menu Item")
-            print("3. Delete Menu Item")
-            print("4. View Menu")
-            print("5. Exit")
-            admin = Admin()
-            choice = input("Select an option: ")
-            if choice == '1':
-                foodname = input("Enter food name: ")
-                foodprice = input("Enter food price: ")
-                admin.add_food_item(foodname, foodprice)
-            elif choice == '2':
-                foodid = input("Enter food id: ")
-                foodname = input("Enter food name: ")
-                foodprice = input("Enter food price: ")
-                admin.update_food_item(foodid, foodname, foodprice)
-            elif choice == '3':
-                foodid = input("Enter food id: ")
-                admin.delete_food_item(foodid)
-            elif choice == '4':
-                admin.get_food_items()
-            elif choice == '5':
-                break
-            else:
-                print("Invalid choice!")
+        menu = [
+            "Admin Menu:",
+            "1. Add Menu Item",
+            "2. Update Menu Item",
+            "3. Delete Menu Item",
+            "4. View Menu",
+            "5. Exit"
+        ]
+        return "\n".join(menu)
+
+    def execute_admin_command(self, choice, args):
+        admin = Admin()
+        if choice == '1':
+            foodname, foodprice = args
+            admin.add_food_item(foodname, foodprice)
+            return "Food item added successfully."
+        elif choice == '2':
+            foodid, foodname, foodprice = args
+            admin.update_food_item(foodid, foodname, foodprice)
+            return "Food item updated successfully."
+        elif choice == '3':
+            foodid = args[0]
+            admin.delete_food_item(foodid)
+            return "Food item deleted successfully."
+        elif choice == '4':
+            return self.view_menu()
+        elif choice == '5':
+            return "Exit"
+        else:
+            return "Invalid choice!"
 
     def chef_menu(self):
-        while True:
-            print("Chef Menu:")
-            print("1. Roll Out Menu for Next Day")
-            print("2. View Feedback")
-            print("3. Generate Monthly Feedback Report")
-            print("4. View Menu")
-            print("5. send final menu for today")
-            print("6. Exit")
-            chef = Chef(None, None, None, None, None)
-            choice = input("Select an option: ")
-            if choice == '1':
-                chef.roll_out_menu(self.connection)
-            elif choice == '2':
-                chef.view_feedback(self.connection)
-            elif choice == '3':
-                chef.generate_report(self.connection)
-            elif choice == '4':
-                self.view_menu()
-            elif choice == '5':
-                chef.send_final_menu(self.connection)
-            elif choice == '6':
-                break
-            else:
-                print("Invalid choice!")
+        menu = [
+            "Chef Menu:",
+            "1. Roll Out Menu for Next Day",
+            "2. View Feedback",
+            "3. Generate Monthly Feedback Report",
+            "4. View Menu",
+            "5. Send Final Menu for Today",
+            "6. Exit"
+        ]
+        return "\n".join(menu)
 
-    def user_menu(self,EmployeeId):
-        while True:
-            print("User Menu:")
-            print("1. View Menu")
-            print("2. Select Food Item")
-            print("3. Give Feedback")
-            print("4. Exit")
-            choice = input("Select an option: ")
-            if choice == '1':
-                self.view_menu(availability_only=True)
-            elif choice == '2':
-                self.select_food_item()
-            elif choice == '3':
-                self.give_feedback(EmployeeId)
-            elif choice == '4':
-                break
-            else:
-                print("Invalid choice!")
+    def execute_chef_command(self, choice, args):
+        chef = Chef(None, None, None, None, None)
+        if choice == '1':
+            meal_type = args[0]
+            chef.roll_out_menu(self.connection, meal_type)
+            return "Menu rolled out for next day."
+        elif choice == '2':
+            chef.view_feedback(self.connection)
+            return "Feedback viewed."
+        elif choice == '3':
+            chef.generate_report(self.connection)
+            return "Monthly feedback report generated."
+        elif choice == '4':
+            return self.view_menu()
+        elif choice == '5':
+            chef.send_final_menu(self.connection)
+            return "Final menu sent for today."
+        elif choice == '6':
+            return "Exit"
+        else:
+            return "Invalid choice!"
+
+    def user_menu(self, employee_id):
+        menu = [
+            "User Menu:",
+            "1. View Menu",
+            "2. Select Food Item",
+            "3. Give Feedback",
+            "4. Exit"
+        ]
+        return "\n".join(menu)
+
+    def execute_user_command(self, choice, employee_id, args):
+        if choice == '1':
+            return self.view_menu(availability_only=True)
+        elif choice == '2':
+            food_item_id = int(args[0])
+            return self.select_food_item(employee_id, food_item_id)
+        elif choice == '3':
+            food_item_id, comment, rating = args
+            return self.give_feedback(employee_id, food_item_id, comment, rating)
+        elif choice == '4':
+            return "Exit"
+        else:
+            return "Invalid choice!"
 
     def view_menu(self, availability_only=False):
         cursor = self.connection.cursor()
@@ -104,62 +118,58 @@ class MenuSystem:
         else:
             cursor.execute("SELECT * FROM fooditem")
         result = cursor.fetchall()
-        print("Menu:")
+        menu = ["Menu:"]
         for row in result:
-            print(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Available: {row[3]}, Lookup ID: {row[4]}")
+            menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Available: {row[3]}, Lookup ID: {row[4]}")
+        return "\n".join(menu)
 
-    def select_food_item(self):
+    def select_food_item(self, employee_id, food_item_id):
         cursor = self.connection.cursor()
-        Date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
-    
-        # Query to get all food items for today along with their names and prices
+        cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (employee_id,))
+        result = cursor.fetchone()
+        userid = result[0]
+        date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+
         query = """
         SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType
         FROM menu
         JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
         WHERE menu.Date = %s
         """
-        cursor.execute(query, (Date,))
+        cursor.execute(query, (date,))
         today_menu = cursor.fetchall()
-    
+
         if today_menu:
-            print("Tomorrow's Menu choices:")
-            for item in today_menu:
-                print(f"Food Item ID: {item[0]}, Name: {item[1]}, Price: {item[2]}, Meal Type: {item[3]}")
-            food_item_id = int(input("Enter food item ID to select: "))
-            cursor.execute("UPDATE menu SET pollvote = pollvote + 1 WHERE Date = %s AND FoodItemID = %s", (Date, food_item_id))
-            self.connection.commit()
-            print("Food item selected.")
+            cursor.execute("SELECT * FROM votetable WHERE UserID = %s AND DATE(VoteDate) = %s AND FoodItemID = %s", 
+                           (userid, date, food_item_id))
+            user_vote = cursor.fetchone()
+
+            if user_vote:
+                return "You have already selected this food item today."
+            else:
+                cursor.execute("INSERT INTO votetable (VoteDate, FoodItemID, UserID) VALUES (%s, %s, %s)",
+                               (date, food_item_id, userid))
+                self.connection.commit()
+                return "Your food item selection has been recorded."
         else:
-            print("No menu items rolled out today.")
+            return "No menu items rolled out today."
 
-
-            
-
-    def give_feedback(self,EmployeeId):
+    def give_feedback(self, employee_id, food_item_id, comment, rating):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (EmployeeId,))
+        cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (employee_id,))
         result = cursor.fetchone()
-        userid=result[0]
-        food_item_id = int(input("Enter food item ID: "))
-        comment = input("Enter your comment: ")
-        rating = int(input("Enter your rating (1-5): "))
+        userid = result[0]
         
-        cursor = self.connection.cursor()
         cursor.execute("INSERT INTO feedback (UserID, Comment, Rating, FeedbackDate, FoodItemID) VALUES (%s, %s, %s, CURDATE(), %s)", 
                        (userid, comment, rating, food_item_id))
         self.connection.commit()
-        print("Feedback submitted successfully.")
+        return "Feedback submitted successfully."
 
 def App_run():
     connection = create_connection()
     menu_system = MenuSystem(connection)
-    role,EmployeeId=run()
-    menu_system.display_menu(role,EmployeeId)
+    role, employee_id = run()
+    menu_system.display_menu(role, employee_id)
 
 if __name__ == "__main__":
     App_run()
-    '''connection = create_connection()
-    menu_system = MenuSystem(connection)
-    role,EmployeeId=run()
-    menu_system.display_menu(role,EmployeeId)'''
