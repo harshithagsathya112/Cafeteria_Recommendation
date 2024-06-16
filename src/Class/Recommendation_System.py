@@ -1,18 +1,16 @@
 import os
 import sys
-import random
 from datetime import datetime, timedelta
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SQLConnect import create_connection, execute_read_query
 
 class RecommendationEngine:
-    def __init__(self, connection, sentiment_words_file):
+    def __init__(self, connection):
         self.connection = connection
         base_dir = os.path.dirname(os.path.dirname(__file__))  # This navigates up to the `src` directory
         sentiment_file_path = os.path.join(base_dir, 'Data', 'sentiment_words.txt')  # Path to the sentiment_words.txt
         self.positive_words, self.negative_words = self.load_sentiment_words(sentiment_file_path)
-
 
     def load_sentiment_words(self, sentiment_words_file):
         positive_words = []
@@ -75,80 +73,41 @@ class RecommendationEngine:
 
         return food_name, average_rating, sentiment_category
 
-    '''@staticmethod
-    def generate_dummy_data(connection):
-        cursor = connection.cursor()
+    def count_votes(self, food_item_id):
+        previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+        query = f"""
+        SELECT COUNT(*) FROM votetable
+        WHERE FoodItemID = {food_item_id} AND DATE(VoteDate) = '{previous_date}'
+        """
+        result = execute_read_query(self.connection, query)
+        return result[0][0] if result else 0
 
-        # Generate dummy users
-        users = [
-            ("1001", "John Doe", 3, "password1"),
-            ("1002", "Jane Smith", 3, "password2"),
-            ("1003", "Emily Davis", 3, "password3")
-        ]
+    def recommend_items(self, top_n=5):
+        query = "SELECT FoodItemID FROM fooditem"
+        food_items = execute_read_query(self.connection, query)
 
-        for employee_id, name, role_id, password in users:
-            cursor.execute("INSERT INTO user (EmployeeID, Name, RoleID, Password) VALUES (%s, %s, %s, %s)",
-                           (employee_id, name, role_id, password))
-        connection.commit()
+        recommendations = []
 
-        # Generate dummy food items
-        food_items = [
-            (1, "Pasta", 7.99, 1),
-            (2, "Pizza", 9.99, 1),
-            (3, "Burger", 5.99, 1)
-        ]
+        for (food_item_id,) in food_items:
+            food_name, average_rating, sentiment_category = self.analyze_feedback(food_item_id)
+            vote_count = self.count_votes(food_item_id)
+            sentiment_score = {"Positive": 1, "Neutral": 0, "Negative": -1}[sentiment_category]
 
-        for food_item_id, item_name, price, availability_status in food_items:
-            cursor.execute("INSERT INTO fooditem (FoodItemID, ItemName, Price, AvailabilityStatus, LookupID) VALUES (%s, %s, %s, %s, %s)",
-                           (food_item_id, item_name, price, availability_status, food_item_id))
-        connection.commit()
+            # Calculate a combined score (you can adjust the weights as needed)
+            combined_score = average_rating + sentiment_score + (vote_count / 10)  # Example weights
 
-        # Generate dummy menu items
-        menu_items = [
-            (datetime.today().strftime('%Y-%m-%d'), "breakfast", 1, 0),
-            (datetime.today().strftime('%Y-%m-%d'), "lunch", 2, 0),
-            (datetime.today().strftime('%Y-%m-%d'), "dinner", 3, 0)
-        ]
+            recommendations.append((food_name, combined_score))
 
-        for date, meal_type, food_item_id, final_flag in menu_items:
-            cursor.execute("INSERT INTO menu (Date, MealType, FoodItemID, FinalFlag) VALUES (%s, %s, %s, %s)",
-                           (date, meal_type, food_item_id, final_flag))
-        connection.commit()
+        # Sort recommendations by the combined score in descending order
+        recommendations.sort(key=lambda x: x[1], reverse=True)
 
-        # Generate dummy feedback
-        feedback_comments = [
-            ("Great taste!", 5),
-            ("Too salty.", 2),
-            ("Loved it!", 4),
-            ("Not my favorite.", 3),
-            ("Perfectly cooked!", 5)
-        ]
-
-        for _ in range(10):
-            user_id = random.randint(1, len(users))
-            food_item_id = random.randint(1, len(food_items))
-            comment, rating = random.choice(feedback_comments)
-            feedback_date = (datetime.today() - timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d')
-
-            cursor.execute("INSERT INTO feedback (UserID, FoodItemID, Comment, Rating, FeedbackDate) VALUES (%s, %s, %s, %s, %s)",
-                           (user_id, food_item_id, comment, rating, feedback_date))
-        connection.commit()
-
-        cursor.close()'''
+        # Return the top N recommendations
+        return recommendations[:top_n]
 
 # Example usage:
 if __name__ == "__main__":
     connection = create_connection()
+    engine = RecommendationEngine(connection)
+    top_recommendations = engine.recommend_items(top_n=3)
 
-    if connection:
-        sentiment_words_path = os.path.join(os.path.dirname(__file__), 'sentiment_words.txt')
-        engine = RecommendationEngine(connection, sentiment_words_path)
-
-        # Analyze feedback for a specific food item
-        food_item_id = 21
-        food_name,average_rating, sentiment_category = engine.analyze_feedback(food_item_id)
-
-        print(f"Average Rating for {food_name}: {average_rating}")
-        print(f"Sentiment for {food_name}: {sentiment_category}")
         
-        connection.close()

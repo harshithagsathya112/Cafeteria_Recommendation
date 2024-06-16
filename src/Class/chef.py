@@ -44,8 +44,19 @@ class Chef:
         previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
 
         cursor = connection.cursor()
-        # Update FinalFlag for previous day's menu items
-        cursor.execute("UPDATE menu SET FinalFlag = %s WHERE Date = %s AND FoodItemID = %s", (1, previous_date, food_item_id))
+
+        # Check if the food item is already in the previous day's menu
+        cursor.execute("SELECT COUNT(*) FROM menu WHERE Date = %s AND FoodItemID = %s", (previous_date, food_item_id))
+        count = cursor.fetchone()[0]
+
+        # If the food item is not in the previous day's menu, add it
+        if count == 0:
+            cursor.execute("INSERT INTO menu (Date, MealType, FoodItemID, FinalFlag) VALUES (%s, %s, %s, %s)",
+                           (previous_date, meal_type, food_item_id, 1))
+        else:
+            # Update FinalFlag for the existing food item
+            cursor.execute("UPDATE menu SET FinalFlag = %s WHERE Date = %s AND FoodItemID = %s", (1, previous_date, food_item_id))
+        
         connection.commit()
 
         # Check if the final flag is set for the food item on Previous's date
