@@ -22,15 +22,17 @@ class MenuSystem:
             return "Invalid role!"
 
     def admin_menu(self):
-        menu = [
-            "Admin Menu:",
-            "1. Add Menu Item",
-            "2. Update Menu Item",
-            "3. Delete Menu Item",
-            "4. View Menu",
-            "5. Exit"
-        ]
-        return "\n".join(menu)
+        while True:
+            menu = [
+                "Admin Menu:",
+                "1. Add Menu Item",
+                "2. Update Menu Item",
+                "3. Delete Menu Item",
+                "4. View Menu",
+                "5. Exit"
+            ]
+            menu_display = "\n".join(menu)
+            yield menu_display
 
     def execute_admin_command(self, choice, args):
         admin = Admin()
@@ -47,55 +49,56 @@ class MenuSystem:
             admin.delete_food_item(foodid)
             return "Food item deleted successfully."
         elif choice == '4':
-            return self.view_menu()
+            return admin.get_food_items()
         elif choice == '5':
             return "Exit"
         else:
             return "Invalid choice!"
 
     def chef_menu(self):
-        menu = [
-            "Chef Menu:",
-            "1. Roll Out Menu for Next Day",
-            "2. View Feedback",
-            "3. Generate Monthly Feedback Report",
-            "4. View Menu",
-            "5. Send Final Menu for Today",
-            "6. Exit"
-        ]
-        return "\n".join(menu)
+        while True:
+            menu = [
+                "Chef Menu:",
+                "1. Roll Out Menu for Next Day",
+                "2. View Feedback",
+                "3. Generate Monthly Feedback Report",
+                "4. View Menu",
+                "5. Send Final Menu for Today",
+                "6. Exit"
+            ]
+            menu_display = "\n".join(menu)
+            yield menu_display
 
     def execute_chef_command(self, choice, args):
         chef = Chef(None, None, None, None, None)
         if choice == '1':
-            meal_type = args[0]
-            chef.roll_out_menu(self.connection, meal_type)
-            return "Menu rolled out for next day."
+            meal_type, food_item_id = args
+            return chef.roll_out_menu(self.connection, meal_type, food_item_id)
         elif choice == '2':
-            chef.view_feedback(self.connection)
-            return "Feedback viewed."
+            return chef.view_feedback(self.connection)
         elif choice == '3':
-            chef.generate_report(self.connection)
-            return "Monthly feedback report generated."
+            return chef.generate_report(self.connection)
         elif choice == '4':
             return self.view_menu()
         elif choice == '5':
-            chef.send_final_menu(self.connection)
-            return "Final menu sent for today."
+            meal_type, food_item_id = args
+            return chef.send_final_menu(self.connection, meal_type, food_item_id)
         elif choice == '6':
             return "Exit"
         else:
             return "Invalid choice!"
 
     def user_menu(self, employee_id):
-        menu = [
-            "User Menu:",
-            "1. View Menu",
-            "2. Select Food Item",
-            "3. Give Feedback",
-            "4. Exit"
-        ]
-        return "\n".join(menu)
+        while True:
+            menu = [
+                "User Menu:",
+                "1. View Menu",
+                "2. Select Food Item",
+                "3. Give Feedback",
+                "4. Exit"
+            ]
+            menu_display = "\n".join(menu)
+            yield menu_display
 
     def execute_user_command(self, choice, employee_id, args):
         if choice == '1':
@@ -120,7 +123,7 @@ class MenuSystem:
         result = cursor.fetchall()
         menu = ["Menu:"]
         for row in result:
-            menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Available: {row[3]}, Lookup ID: {row[4]}")
+            menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Available: {row[3]}")
         return "\n".join(menu)
 
     def select_food_item(self, employee_id, food_item_id):

@@ -6,7 +6,40 @@ import os
 # Add the Class directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
 from DisplayMenu import MenuSystem
-from SQLConnect import create_connection
+from SQLConnect import create_connection, execute_read_query
+
+class User:
+    def __init__(self, name, employeeid):
+        self.name = name
+        self.employeeid = employeeid
+
+    def get_role_from_employeeid(self):
+        connection = create_connection()
+        query = f"SELECT RoleName FROM role WHERE RoleID = (SELECT roleID FROM user WHERE EmployeeID = '{self.employeeid}')"
+        get_role = execute_read_query(connection, query)
+        if get_role:
+            return get_role[0][0]  # Accessing the first element of the first tuple
+        return None
+
+    def login(self, role):
+        if role == "Admin":
+            return "Admin"
+        elif role == "Chef":
+            return 'Chef'
+        else:
+            return "Employee"
+
+    @staticmethod
+    def verify_employee(name, employeeid):
+        connection = create_connection()
+        query = f"SELECT UserID FROM user WHERE name='{name}' AND EmployeeID='{employeeid}'"
+        user = execute_read_query(connection, query)
+        if user:
+            user_instance = User(name, employeeid)
+            role = user_instance.get_role_from_employeeid()
+            if role:
+                return user_instance.login(role), employeeid
+        return None, None
 
 def handle_client(client_socket, menu_system):
     while True:
@@ -15,11 +48,18 @@ def handle_client(client_socket, menu_system):
             request = client_socket.recv(1024).decode('utf-8')
             if not request:
                 break
-
             print(f"Received request: {request}")
-
             # Process the request
             request_parts = request.split(",")
+            if request_parts[0] == "verify":
+                role_name, employee_id = User.verify_employee(request_parts[1], request_parts[2])
+                if role_name:
+                    response = f"verified,{role_name},{employee_id}"
+                else:
+                    response = "verification_failed"
+                client_socket.send(response.encode('utf-8'))
+                continue
+
             role_name = request_parts[0]
             employee_id = int(request_parts[1])
             command = request_parts[2] if len(request_parts) > 2 else None
@@ -34,9 +74,21 @@ def handle_client(client_socket, menu_system):
                     response = menu_system.execute_user_command(command, employee_id, args)
                 else:
                     response = "Invalid role!"
+                if response == "Exit":
+                    client_socket.send(response.encode('utf-8'))
+                    break
             else:
-                response = menu_system.display_menu(role_name, employee_id)
-
+                if role_name == 'Admin':
+                    menu_generator = menu_system.admin_menu()
+                elif role_name == 'Chef':
+                    menu_generator = menu_system.chef_menu()
+                elif role_name == 'Employee':
+                    menu_generator = menu_system.user_menu(employee_id)
+                else:
+                    response = "Invalid role!"
+                    client_socket.send(response.encode('utf-8'))
+                    continue
+                response = next(menu_generator)
             # Send a response back to the client
             client_socket.send(response.encode('utf-8'))
         except ConnectionResetError:
@@ -44,19 +96,17 @@ def handle_client(client_socket, menu_system):
         except Exception as e:
             print(f"Error: {e}")
             break
-
     client_socket.close()
 
 def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Reuse the address
     server.bind(("0.0.0.0", 9999))
     server.listen(5)
     print("Server listening on port 9999")
-
     # Create a database connection
     connection = create_connection()
     menu_system = MenuSystem(connection)
-
     while True:
         client_socket, addr = server.accept()
         print(f"Accepted connection from {addr}")

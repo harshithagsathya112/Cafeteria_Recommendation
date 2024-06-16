@@ -32,9 +32,11 @@ class Admin:
                 values.append(price)
 
             if updates:
+                self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
                 sql = f"UPDATE fooditem_main SET {', '.join(updates)} WHERE LookupID = %s"
                 values.append(food_item_id)
                 self.cursor.execute(sql, values)
+                self.cursor.execute("SET SQL_SAFE_UPDATES = 1;")
                 self.connection.commit()
                 print(f"Food item with ID: {food_item_id} updated")
         except Exception as e:
@@ -53,8 +55,10 @@ class Admin:
         try:
             self.cursor.execute("SELECT * FROM fooditem_main")
             result = self.cursor.fetchall()
+            menu = ["Menu:"]
             for row in result:
-                print(row)
+                menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}")
+            return "\n".join(menu)
         except Exception as e:
             print(f"Error fetching food items: {e}")
 

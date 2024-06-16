@@ -18,7 +18,7 @@ def create_connection():
         host="localhost",
         user="root",
         password= "Harshitha@555",
-        database="cafeteria"
+        database="cafeteriadb"
     )
         
     except Error as e:

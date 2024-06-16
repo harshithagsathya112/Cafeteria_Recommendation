@@ -38,10 +38,17 @@ class User:
         connection = create_connection()
         query = f"SELECT UserID FROM user WHERE name='{name}' AND EmployeeID='{employeeid}'"
         user = execute_read_query(connection, query)
-        return user != []
+        if user != []:
+            role = user.get_role_from_employeeid()
+            if role:
+                return user.login(role),employeeid
+            else:
+                print("Role not found.")
+        else:
+            print("User not verified.")
     
-def run():
-    name, employeeid = User.userinput()
+def run(name,employeeid):
+    #name, employeeid = User.userinput()
     user = User(name, employeeid)
     if User.verify_employee(name, employeeid):
         role = user.get_role_from_employeeid()
