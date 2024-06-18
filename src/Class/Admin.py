@@ -2,6 +2,7 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SQLConnect import create_connection
+from Notification import insert_notification_for_all_users
 
 class Admin:
     def __init__(self):
@@ -15,7 +16,10 @@ class Admin:
             self.cursor.execute(sql, values)
             self.connection.commit()
             print(f"Food item added with ID: {self.cursor.lastrowid}")
+            message = f"New food item '{item_name}' has been added."
+            insert_notification_for_all_users(message)
             return self.cursor.lastrowid
+        
         except Exception as e:
             print(f"Error adding food item: {e}")
 

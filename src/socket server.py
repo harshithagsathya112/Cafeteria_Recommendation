@@ -2,11 +2,12 @@ import socket
 import threading
 import sys
 import os
+import json
 
 # Add the Class directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
-from DisplayMenu import MenuSystem
-from SQLConnect import create_connection, execute_read_query
+from Cafeteria import MenuSystem
+from SQLConnect import create_connection, execute_read_query,execute_query
 
 class User:
     def __init__(self, name, employeeid):
@@ -41,6 +42,15 @@ class User:
                 return user_instance.login(role), employeeid
         return None, None
 
+def get_notifications(employee_id):
+    connection = create_connection()
+    query = f"SELECT Message FROM notification WHERE UserID = (SELECT UserID FROM user WHERE EmployeeID = '{employee_id}') AND IsRead = 0"
+    notifications = execute_read_query(connection, query)
+    if notifications:
+        update_query = f"UPDATE notification SET IsRead = 1 WHERE UserID = (SELECT UserID FROM user WHERE EmployeeID = '{employee_id}') AND IsRead = 0"
+        execute_query(connection, update_query)
+    return [notification[0] for notification in notifications]
+
 def handle_client(client_socket, menu_system):
     while True:
         try:
@@ -54,7 +64,8 @@ def handle_client(client_socket, menu_system):
             if request_parts[0] == "verify":
                 role_name, employee_id = User.verify_employee(request_parts[1], request_parts[2])
                 if role_name:
-                    response = f"verified,{role_name},{employee_id}"
+                    notifications = get_notifications(employee_id)
+                    response = f"verified,{role_name},{employee_id},{json.dumps(notifications)}"
                 else:
                     response = "verification_failed"
                 client_socket.send(response.encode('utf-8'))

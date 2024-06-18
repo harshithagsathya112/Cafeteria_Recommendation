@@ -48,7 +48,6 @@ class User:
             print("User not verified.")
     
 def run(name,employeeid):
-    #name, employeeid = User.userinput()
     user = User(name, employeeid)
     if User.verify_employee(name, employeeid):
         role = user.get_role_from_employeeid()
@@ -60,14 +59,5 @@ def run(name,employeeid):
         print("User not verified.")
 
 if __name__ == "__main__":
-    '''name, employeeid = User.userinput()
-    user = User(name, employeeid)
-    if User.verify_employee(name, employeeid):
-        role = user.get_role_from_employeeid()
-        if role:
-            user.login(role)
-        else:
-            print("Role not found.")
-    else:
-        print("User not verified.")'''
+   
     run()

@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from Notification import insert_notification_for_all_users
 
 class Chef:
     def __init__(self, user_id, employee_id, name, role_id, password):
@@ -14,6 +15,10 @@ class Chef:
         cursor = connection.cursor()
         cursor.execute("INSERT INTO menu (Date, MealType, FoodItemID) VALUES (%s, %s, %s)", 
                        (date, meal_type, food_item_id))
+        cursor.execute("SELECT ItemName FROM fooditem WHERE FoodItemID = %s", (food_item_id,))
+        food_name = cursor.fetchone()[0]
+        message = f"{food_name} has been add in rolled out menu."
+        insert_notification_for_all_users(message)
         connection.commit()
         return "Menu rolled out for the next day."
 
@@ -42,6 +47,7 @@ class Chef:
     def send_final_menu(self, connection, meal_type, food_item_id):
         today_date = datetime.today().strftime('%Y-%m-%d')
         previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+        day_before_previous_date = (datetime.today() - timedelta(days=2)).strftime('%Y-%m-%d')
 
         cursor = connection.cursor()
 
@@ -67,9 +73,27 @@ class Chef:
         for item in food_items_with_final_flag:
             cursor.execute("UPDATE fooditem SET AvailabilityStatus = %s WHERE FoodItemID = %s", 
                            (1, item[0]))
+            
+            cursor.execute("SELECT ItemName FROM fooditem WHERE FoodItemID = %s", (item[0],))
+            food_name = cursor.fetchone()[0]
+            message = f"{food_name} is now available."
+            insert_notification_for_all_users(message)
 
         # Set availability status of food items not in the previous day's menu to 0
         cursor.execute("UPDATE fooditem SET AvailabilityStatus = %s WHERE FoodItemID NOT IN (SELECT FoodItemID FROM menu WHERE Date = %s AND FinalFlag = 1)", 
                        (0, previous_date))
+        
+        cursor.execute("SELECT FoodItemID FROM menu WHERE Date = %s AND FinalFlag = 1", (previous_date,))
+        previous_day_final_menu = set(item[0] for item in cursor.fetchall())
+
+        cursor.execute("SELECT FoodItemID FROM menu WHERE Date = %s AND FinalFlag = 1", (day_before_previous_date,))
+        day_before_previous_final_menu = set(item[0] for item in cursor.fetchall())
+
+        # Find changes in availability status
+        newly_available = previous_day_final_menu - day_before_previous_final_menu
+        newly_unavailable = day_before_previous_final_menu - previous_day_final_menu
+
+        
+        
         connection.commit()
         return "Final flag updated for previous day's menu items and availability statuses updated."

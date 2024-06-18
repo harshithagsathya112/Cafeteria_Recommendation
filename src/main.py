@@ -4,7 +4,7 @@ import sys
 import os
 # Add the Class directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
-from DisplayMenu import MenuSystem
+from Cafeteria import MenuSystem
 from SQLConnect import create_connection
 def handle_client(client_socket, menu_system):
     while True:

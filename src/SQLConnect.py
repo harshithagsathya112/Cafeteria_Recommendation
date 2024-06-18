@@ -25,6 +25,14 @@ def create_connection():
         print(f"The error '{e}' occurred")
 
     return connection
+   
+def execute_query(connection, query):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+    except Error as e:
+        print(f"The error '{e}' occurred")
 
 
 #if __name__ == "__main__":

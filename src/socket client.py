@@ -1,4 +1,5 @@
 import socket
+import json
 
 def handle_input_request(prompt):
     response = input(prompt)
@@ -81,7 +82,12 @@ def main():
     response = client.recv(1024).decode('utf-8')
 
     if response.startswith("verified"):
-        _, role_name, verified_employee_id = response.split(',')
+        _, role_name, verified_employee_id, notifications = response.split(',', 3)
+        notifications = json.loads(notifications)
+        if notifications:
+            print("Notifications:")
+            for notification in notifications:
+                print(f"- {notification}")
     else:
         print("Verification failed. Exiting.")
         client.close()
