@@ -13,7 +13,7 @@ class User:
         query = f"SELECT RoleName FROM role WHERE RoleID = (SELECT roleID FROM user WHERE EmployeeID = '{self.employeeid}')"
         get_role = execute_read_query(connection, query)
         if get_role:
-            return get_role[0][0]  # Accessing the first element of the first tuple
+            return get_role[0][0]  
         return None
 
     def login(self, role):

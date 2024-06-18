@@ -1,8 +1,9 @@
 import os
 import sys
-from User import User, run
+from UserLogin import User, run
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SQLConnect import create_connection
+from Recommendation_System import RecommendationEngine
 from Admin import Admin
 from chef import Chef
 from datetime import datetime, timedelta
@@ -64,7 +65,8 @@ class MenuSystem:
                 "3. Generate Monthly Feedback Report",
                 "4. View Menu",
                 "5. Send Final Menu for Today",
-                "6. Exit"
+                "6. View Recommendation"
+                "7. Exit"
             ]
             menu_display = "\n".join(menu)
             yield menu_display
@@ -82,9 +84,11 @@ class MenuSystem:
             return self.view_menu()
         elif choice == '5':
             meal_type, food_item_id = args
-            
             return chef.send_final_menu(self.connection, meal_type, food_item_id)
-        elif choice == '6':
+        elif choice=='6':
+            engine = RecommendationEngine(self.connection)
+            return engine.recommend_items(top_n=5) 
+        elif choice == '7':
             return "Exit"
         else:
             return "Invalid choice!"

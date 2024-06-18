@@ -65,8 +65,7 @@ class RecommendationEngine:
             total_rating += rating
             total_feedback += 1
             sentiment_score += self.simple_sentiment_analysis(comment)
-            food_name = name  # All rows will have the same name for this food item
-
+            food_name = name  
         average_rating = total_rating / total_feedback if total_feedback else 0
         average_sentiment_score = sentiment_score / total_feedback if total_feedback else 0
         sentiment_category = self.categorize_sentiment(average_sentiment_score)
@@ -82,7 +81,7 @@ class RecommendationEngine:
         result = execute_read_query(self.connection, query)
         return result[0][0] if result else 0
 
-    def recommend_items(self, top_n=5):
+    def recommend_items(self, top_n=3):
         query = "SELECT FoodItemID FROM fooditem"
         food_items = execute_read_query(self.connection, query)
 
@@ -92,22 +91,20 @@ class RecommendationEngine:
             food_name, average_rating, sentiment_category = self.analyze_feedback(food_item_id)
             vote_count = self.count_votes(food_item_id)
             sentiment_score = {"Positive": 1, "Neutral": 0, "Negative": -1}[sentiment_category]
-
-            # Calculate a combined score (you can adjust the weights as needed)
             combined_score = average_rating + sentiment_score + (vote_count / 10)  # Example weights
 
-            recommendations.append((food_name, combined_score))
+            recommendations.append((food_item_id, food_name, combined_score))
 
-        # Sort recommendations by the combined score in descending order
-        recommendations.sort(key=lambda x: x[1], reverse=True)
+        recommendations.sort(key=lambda x: x[2], reverse=True)
+        
+        # Format the top recommendations as a string
+        top_recommendations = recommendations[:top_n]
+        result = "\n".join([f"ID: {food_id}, Name: {food_name}, Score: {score:.2f}" for food_id, food_name, score in top_recommendations])
+        return result
 
-        # Return the top N recommendations
-        return recommendations[:top_n]
 
-# Example usage:
 if __name__ == "__main__":
     connection = create_connection()
     engine = RecommendationEngine(connection)
     top_recommendations = engine.recommend_items(top_n=3)
-
-        
+    print(top_recommendations)

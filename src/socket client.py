@@ -23,7 +23,8 @@ def display_menu(role_name):
             "3. Generate Monthly Feedback Report",
             "4. View Menu",
             "5. Send Final Menu for Today",
-            "6. Exit"
+            "6. View Recommendation",
+            "7. Exit"
         ]
     elif role_name == 'Employee':
         menu = [
@@ -95,7 +96,7 @@ def main():
         command = input("Enter your Choice: ")
         if role_name == 'Admin' and command == '5':
             should_exit = True
-        elif role_name == 'Chef' and command == '6':
+        elif role_name == 'Chef' and command == '7':
             should_exit = True
         elif role_name == 'Employee' and command == '4':
             should_exit = True
