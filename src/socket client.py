@@ -24,8 +24,9 @@ def display_menu(role_name):
             "3. Generate Monthly Feedback Report",
             "4. View Menu",
             "5. Send Final Menu for Today",
-            "6. View Recommendation",
-            "7. Exit"
+            "6. View Rollout menu",
+            "7. View Recommendation",
+            "8. Exit"
         ]
     elif role_name == 'Employee':
         menu = [
@@ -33,7 +34,8 @@ def display_menu(role_name):
             "1. View Menu",
             "2. Select Food Item",
             "3. Give Feedback",
-            "4. Exit"
+            "4. View Rollout menu",
+            "5. Exit"
         ]
     else:
         raise ValueError("Invalid role name received from server.")
@@ -102,9 +104,9 @@ def main():
         command = input("Enter your Choice: ")
         if role_name == 'Admin' and command == '5':
             should_exit = True
-        elif role_name == 'Chef' and command == '7':
+        elif role_name == 'Chef' and command == '8':
             should_exit = True
-        elif role_name == 'Employee' and command == '4':
+        elif role_name == 'Employee' and command == '5':
             should_exit = True
 
         if should_exit:

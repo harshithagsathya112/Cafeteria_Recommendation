@@ -4,7 +4,6 @@ import sys
 import os
 import json
 
-# Add the Class directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
 from Cafeteria import MenuSystem
 from SQLConnect import create_connection, execute_read_query,execute_query

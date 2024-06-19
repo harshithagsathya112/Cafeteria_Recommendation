@@ -73,22 +73,3 @@ class Admin:
             print("Database connection closed")
         except Exception as e:
             print(f"Error closing connection: {e}")
-
-'''# Usage example
-if __name__ == "__main__":
-    admin = Admin()
-
-    # Adding a food item
-    id = admin.add_food_item(item_name="Salad1", price=10.99)
-
-    # Updating a food item
-    admin.update_food_item(food_item_id=id, price=12.99)
-
-    # Deleting a food item
-    admin.delete_food_item(food_item_id=id)
-
-    # Fetching all food items
-    admin.get_food_items()
-
-    # Closing the database connection
-    admin.close_connection()'''

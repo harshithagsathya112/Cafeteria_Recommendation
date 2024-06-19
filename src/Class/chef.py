@@ -97,3 +97,25 @@ class Chef:
         
         connection.commit()
         return "Final flag updated for previous day's menu items and availability statuses updated."
+
+def view_rolled_out_menu_for_today(connection):
+        try:
+            cursor = connection.cursor()
+            previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+            query = """
+            SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType
+            FROM menu
+            JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
+            WHERE menu.Date = %s
+            """
+            cursor.execute(query, (previous_date,))
+            result = cursor.fetchall()
+            if result:
+                rolled_out_menu = ["Rolled Out Menu for Today:"]
+                for row in result:
+                    rolled_out_menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Meal Type: {row[3]}")
+                return "\n".join(rolled_out_menu)
+            else:
+                return "No menu items rolled out for today."
+        except Exception as e:
+            return f"Error fetching today's rolled-out menu: {e}"
