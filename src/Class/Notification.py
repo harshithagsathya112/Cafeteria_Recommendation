@@ -1,11 +1,19 @@
 from datetime import datetime
+import os,sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SQLConnect import create_connection
+
 
 def insert_notification_for_all_users(message):
     connection = create_connection()
     cursor = connection.cursor()
 
-    cursor.execute("SELECT UserID FROM user")
+    cursor.execute("""
+        SELECT u.UserID 
+        FROM user u
+        JOIN role r ON u.RoleID = r.RoleID 
+        WHERE r.RoleName = 'Employee'
+    """)
     users = cursor.fetchall()
 
     today_date = datetime.today().strftime('%Y-%m-%d')

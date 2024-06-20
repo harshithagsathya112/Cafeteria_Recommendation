@@ -2,6 +2,7 @@ import sys
 import os
 from datetime import datetime, timedelta
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
+from Recommendation_System import RecommendationEngine
 from SQLConnect import create_connection, execute_read_query, execute_query
 
 class Employee:
@@ -26,9 +27,30 @@ class Employee:
             else:
                 cursor.execute("SELECT * FROM fooditem")
             result = cursor.fetchall()
+        
             menu = ["Menu:"]
+            engine = None
+        
+            if availability_only:
+                engine = RecommendationEngine(connection)
+        
             for row in result:
-                menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Available: {row[3]}")
+                food_item_id = row[0]
+                food_name = row[1]
+                food_price = row[2]
+                availability_status = "Available" if row[3] else "Not Available"
+            
+                if availability_only and engine:
+                    _, average_rating, sentiment_category = engine.analyze_feedback(food_item_id)
+                    menu.append(
+                        f"ID: {food_item_id}, Name: {food_name}, Price: {food_price}, Available: {availability_status}, "
+                        f"Average Rating: {average_rating:.2f}, Sentiment: {sentiment_category}"
+                    )
+                else:
+                    menu.append(
+                        f"ID: {food_item_id}, Name: {food_name}, Price: {food_price}, Available: {availability_status}"
+                    )
+                
             return "\n".join(menu)
         except Exception as e:
             return f"Error fetching menu: {e}"

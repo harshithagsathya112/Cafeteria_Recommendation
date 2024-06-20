@@ -61,13 +61,15 @@ def process_command(role_name, command):
             args.append(handle_input_request("Enter food item ID: "))
             args.append(handle_input_request("Enter your comment: "))
             args.append(handle_input_request("Enter your rating (1-5): "))
-    elif role_name == 'Chef' and command in ['1', '5']:
+    elif role_name == 'Chef' and command in ['1', '5','7']:
         if command == '1':
             args.append(handle_input_request("Enter the meal type (e.g., breakfast, lunch, dinner): "))
             args.append(handle_input_request("Enter the food item ID: "))
         elif command == '5':
             args.append(handle_input_request("Enter the meal type (e.g., breakfast, lunch, dinner): "))
             args.append(handle_input_request("Enter the food item ID: "))
+        elif command == '7':
+            args.append(handle_input_request("No of items you want to view from recommendation engine: "))
 
     return args
 
@@ -113,7 +115,7 @@ def main():
             client.send(request.encode('utf-8'))
             response = client.recv(1024).decode('utf-8')
             print(f"Received response:\n{response}")
-            
+
             if should_exit:
                 break
 

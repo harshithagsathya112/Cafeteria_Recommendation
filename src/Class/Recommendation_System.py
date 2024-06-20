@@ -86,8 +86,8 @@ class RecommendationEngine:
         SELECT COUNT(*) FROM votetable
         WHERE FoodItemID = {food_item_id} AND DATE(VoteDate) = '{previous_date}'
         """
-        Total_Votes = execute_read_query(self.connection, query)
-        return Total_Votes[0][0] if Total_Votes else 0
+        total_votes = execute_read_query(self.connection, query)
+        return total_votes[0][0] if total_votes else 0
 
     def recommend_items(self, top_n=3):
         query = "SELECT FoodItemID FROM fooditem"

@@ -96,8 +96,9 @@ class Cafeteria:
         elif choice == '6':
             return view_rolled_out_menu_for_today(self.connection)
         elif choice == '7':
+            no_items_recommended = int(args[0])
             engine = RecommendationEngine(self.connection)
-            return engine.recommend_items(top_n=5)
+            return engine.recommend_items(top_n=no_items_recommended)
         elif choice == '8':
             return "Logout"
         else:
