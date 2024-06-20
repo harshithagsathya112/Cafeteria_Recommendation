@@ -18,34 +18,23 @@ class User:
 
     def login(self, role):
         if role == "Admin":
-            print("Welcome, Admin!")
             return "Admin"
         elif role == "Chef":
-            print("Welcome, Chef!")
             return 'Chef'
         else:
-            print("Welcome, Employee!")
             return "Employee"
-
-    @staticmethod
-    def userinput():
-        name = input("Enter your name: ")
-        employeeid = input("Enter employee ID: ")
-        return name, employeeid
 
     @staticmethod
     def verify_employee(name, employeeid):
         connection = create_connection()
         query = f"SELECT UserID FROM user WHERE name='{name}' AND EmployeeID='{employeeid}'"
         user = execute_read_query(connection, query)
-        if user != []:
-            role = user.get_role_from_employeeid()
+        if user:
+            user_instance = User(name, employeeid)
+            role = user_instance.get_role_from_employeeid()
             if role:
-                return user.login(role),employeeid
-            else:
-                print("Role not found.")
-        else:
-            print("User not verified.")
+                return user_instance.login(role), employeeid
+        return None, None
     
 def run(name,employeeid):
     user = User(name, employeeid)

@@ -72,53 +72,52 @@ def process_command(role_name, command):
     return args
 
 def main():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(("127.0.0.1", 9999))
+    while True:
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect(("127.0.0.1", 9999))
+        user_name = input("Enter your name: ")
+        employee_id = input("Enter your employee ID: ")
 
-    user_name = input("Enter your name: ")
-    employee_id = input("Enter your employee ID: ")
-
-    # Send verification request to the server
-    verification_request = f"verify,{user_name},{employee_id}"
-    client.send(verification_request.encode('utf-8'))
-    response = client.recv(1024).decode('utf-8')
-
-    if response.startswith("verified"):
-        _, role_name, verified_employee_id, notifications = response.split(',', 3)
-        notifications = json.loads(notifications)
-        if notifications:
-            print("Notifications:")
-            for notification in notifications:
-                print(f"- {notification}")
-    else:
-        print("Verification failed. Exiting.")
-        client.close()
-        return
-
-    should_exit = False
-
-    while not should_exit:
-        menu_display = display_menu(role_name)
-        print(menu_display)
-
-        command = input("Enter your Choice: ")
-        if role_name == 'Admin' and command == '5':
-            should_exit = True
-        elif role_name == 'Chef' and command == '8':
-            should_exit = True
-        elif role_name == 'Employee' and command == '5':
-            should_exit = True
-
-        if should_exit:
-            break
-
-        args = process_command(role_name, command)
-        request = f"{role_name},{verified_employee_id},{command},{','.join(args)}"
-        client.send(request.encode('utf-8'))
+        verification_request = f"verify,{user_name},{employee_id}"
+        client.send(verification_request.encode('utf-8'))
         response = client.recv(1024).decode('utf-8')
-        print(f"Received response:\n{response}")
 
-    client.close()
+        if response.startswith("verified"):
+            _, role_name, verified_employee_id, notifications = response.split(',', 3)
+            notifications = json.loads(notifications)
+            if notifications:
+                print("Notifications:")
+                for notification in notifications:
+                    print(f"- {notification}")
+        else:
+            print("Verification failed. Exiting.")
+            client.close()
+            return
+
+        should_exit = False
+
+        while not should_exit:
+            menu_display = display_menu(role_name)
+            print(menu_display)
+
+            command = input("Enter your Choice: ")
+            if role_name == 'Admin' and command == '5':
+                should_exit = True
+            elif role_name == 'Chef' and command == '8':
+                should_exit = True
+            elif role_name == 'Employee' and command == '5':
+                should_exit = True
+
+            if should_exit:
+                break
+
+            args = process_command(role_name, command)
+            request = f"{role_name},{verified_employee_id},{command},{','.join(args)}"
+            client.send(request.encode('utf-8'))
+            response = client.recv(1024).decode('utf-8')
+            print(f"Received response:\n{response}")
+
+        client.close()
 
 if __name__ == "__main__":
     main()

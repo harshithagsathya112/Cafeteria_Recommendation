@@ -1,8 +1,6 @@
 import sys
 import os
 from datetime import datetime, timedelta
-
-# Add the Class directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
 from SQLConnect import create_connection, execute_read_query, execute_query
 

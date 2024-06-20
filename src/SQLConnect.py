@@ -34,7 +34,4 @@ def execute_query(connection, query):
     except Error as e:
         print(f"The error '{e}' occurred")
 
-
-#if __name__ == "__main__":
-# Replace the parameters with your MySQL server details
 connection = create_connection()
