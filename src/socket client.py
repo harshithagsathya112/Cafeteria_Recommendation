@@ -14,7 +14,7 @@ def display_menu(role_name):
             "2. Update Menu Item",
             "3. Delete Menu Item",
             "4. View Menu",
-            "5. Exit"
+            "5. Logout"
         ]
     elif role_name == 'Chef':
         menu = [
@@ -26,7 +26,7 @@ def display_menu(role_name):
             "5. Send Final Menu for Today",
             "6. View Rollout menu",
             "7. View Recommendation",
-            "8. Exit"
+            "8. Logout"
         ]
     elif role_name == 'Employee':
         menu = [
@@ -35,7 +35,7 @@ def display_menu(role_name):
             "2. Select Food Item",
             "3. Give Feedback",
             "4. View Rollout menu",
-            "5. Exit"
+            "5. Logout"
         ]
     else:
         raise ValueError("Invalid role name received from server.")
@@ -108,14 +108,14 @@ def main():
             elif role_name == 'Employee' and command == '5':
                 should_exit = True
 
-            if should_exit:
-                break
-
             args = process_command(role_name, command)
             request = f"{role_name},{verified_employee_id},{command},{','.join(args)}"
             client.send(request.encode('utf-8'))
             response = client.recv(1024).decode('utf-8')
             print(f"Received response:\n{response}")
+            
+            if should_exit:
+                break
 
         client.close()
 

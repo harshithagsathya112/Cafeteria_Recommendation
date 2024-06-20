@@ -3,11 +3,12 @@ import threading
 import sys
 import os
 import json
-
+from Logger import log_activity
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
 from Cafeteria import Cafeteria
 from SQLConnect import create_connection, execute_read_query,execute_query
 from UserLogin import User
+
 
 def get_notifications(employee_id):
     connection = create_connection()
@@ -17,6 +18,8 @@ def get_notifications(employee_id):
         update_query = f"UPDATE notification SET IsRead = 1 WHERE UserID = (SELECT UserID FROM user WHERE EmployeeID = '{employee_id}') AND IsRead = 0"
         execute_query(connection, update_query)
     return [notification[0] for notification in notifications]
+
+
 
 def handle_client(client_socket, Cafetertia_system):
     while True:
@@ -30,6 +33,7 @@ def handle_client(client_socket, Cafetertia_system):
                 role_name, employee_id = User.verify_employee(request_parts[1], request_parts[2])
                 if role_name:
                     notifications = get_notifications(employee_id)
+                    log_activity(f"User {request_parts[1]} with ID {request_parts[2]} logged in as {role_name}")
                     response = f"verified,{role_name},{employee_id},{json.dumps(notifications)}"
                 else:
                     response = "verification_failed"
@@ -43,14 +47,17 @@ def handle_client(client_socket, Cafetertia_system):
 
             if command:
                 if role_name == 'Admin':
-                    response = Cafetertia_system.execute_admin_command(command, args)
+                    if command==5:
+                        log_activity(f"User logged out of the system")
+                    response = Cafetertia_system.execute_admin_command(command, args)   
                 elif role_name == 'Chef':
                     response = Cafetertia_system.execute_chef_command(command, args)
                 elif role_name == 'Employee':
                     response = Cafetertia_system.execute_user_command(command, employee_id, args)
                 else:
                     response = "Invalid role!"
-                if response == "Exit":
+                if response == "Logout":
+                    log_activity(f"User with ID {employee_id} logged out of the system")
                     client_socket.send(response.encode('utf-8'))
                     break
             else:

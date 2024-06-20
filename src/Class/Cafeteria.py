@@ -4,11 +4,15 @@ from datetime import datetime, timedelta
 from chef import view_rolled_out_menu_for_today
 from UserLogin import User
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
+from Logger import log_activity
 from SQLConnect import create_connection
 from Recommendation_System import RecommendationEngine
 from Admin import Admin
 from chef import Chef
 from Employee import Employee
+import logging
+logging.basicConfig(filename='user_activity.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
 
 class Cafeteria:
     def __init__(self, connection):
@@ -59,7 +63,7 @@ class Cafeteria:
             except Exception as e:
                 return f"Error fetching food items: {e}"
         elif choice == '5':
-            return "Exit"
+            return "Logout"
         else:
             return "Invalid choice!"
 
@@ -95,7 +99,7 @@ class Cafeteria:
             engine = RecommendationEngine(self.connection)
             return engine.recommend_items(top_n=5)
         elif choice == '8':
-            return "Exit"
+            return "Logout"
         else:
             return "Invalid choice!"
 
@@ -128,7 +132,7 @@ class Cafeteria:
         elif choice == '4':
             return view_rolled_out_menu_for_today(self.connection)
         elif choice == '5':
-            return "Exit"
+            return "Logout"
         else:
             return "Invalid choice!"
 
@@ -137,7 +141,8 @@ class Cafeteria:
 
     def food_item_exists(self, food_item_id):
         try:
-            cursor = self.connection.cursor()
+            connection = create_connection()
+            cursor=connection.cursor()
             cursor.execute("SELECT COUNT(*) FROM fooditem WHERE FoodItemID = %s", (food_item_id,))
             result = cursor.fetchone()
             return result[0] > 0
