@@ -69,6 +69,7 @@ class Cafeteria:
 
     def execute_chef_command(self, choice, args):
         chef = Chef(None, None, None, None, None)
+        engine = RecommendationEngine(self.connection)
         if choice == '1':
             meal_type, food_item_id = args
             try:
@@ -100,6 +101,28 @@ class Cafeteria:
             engine = RecommendationEngine(self.connection)
             return engine.recommend_items(top_n=no_items_recommended)
         elif choice == '8':
+            discard_list = engine.generate_discard_list()
+            output = "Discard Menu Item List:\n"
+            for item in discard_list:
+                output += f"- ID: {item[0]}, Name: {item[1]} (Rating: {item[2]:.2f}, Sentiment: {item[3]})\n"
+
+            output += "\nConsole Options:\n"
+            output += "Enter --Remove-- to Remove the Food Item from Menu List\n"
+            output += "Enter --Feedback-- to send Feedback request to users\n"
+            return output
+        
+        elif choice=='Remove':
+            admin=Admin()
+            food_item_id_to_remove = int(args[0])
+            admin.delete_food_item(food_item_id_to_remove)
+            return "Food Item is deleted successfully"
+        
+        elif choice=='Feedback':
+            food_item_id_to_get_feedback = int(args[0])
+            engine.request_detailed_feedback(food_item_id_to_get_feedback)
+            return "feedback sent successfully"
+
+        elif choice == '9':
             return "Logout"
         else:
             return "Invalid choice!"

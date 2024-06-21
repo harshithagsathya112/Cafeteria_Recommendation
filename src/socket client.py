@@ -26,7 +26,8 @@ def display_menu(role_name):
             "5. Send Final Menu for Today",
             "6. View Rollout menu",
             "7. View Recommendation",
-            "8. Logout"
+            "8. View Discard menu List",
+            "9. Logout"
         ]
     elif role_name == 'Employee':
         menu = [
@@ -61,7 +62,7 @@ def process_command(role_name, command):
             args.append(handle_input_request("Enter food item ID: "))
             args.append(handle_input_request("Enter your comment: "))
             args.append(handle_input_request("Enter your rating (1-5): "))
-    elif role_name == 'Chef' and command in ['1', '5','7']:
+    elif role_name == 'Chef' and command in ['1', '5','7','8','Remove','Feedback']:
         if command == '1':
             args.append(handle_input_request("Enter the meal type (e.g., breakfast, lunch, dinner): "))
             args.append(handle_input_request("Enter the food item ID: "))
@@ -70,6 +71,12 @@ def process_command(role_name, command):
             args.append(handle_input_request("Enter the food item ID: "))
         elif command == '7':
             args.append(handle_input_request("No of items you want to view from recommendation engine: "))
+        elif command=='8':
+            FlagDiscardoption=True
+        elif (command=='Feedback' or 'Remove'):
+            args.append(handle_input_request("Enter the food item ID: "))
+
+
 
     return args
 
@@ -93,8 +100,9 @@ def main():
                     print(f"- {notification}")
         else:
             print("Verification failed. Exiting.")
+            should_exit = True
             client.close()
-            return
+            continue
 
         should_exit = False
 
@@ -105,7 +113,7 @@ def main():
             command = input("Enter your Choice: ")
             if role_name == 'Admin' and command == '5':
                 should_exit = True
-            elif role_name == 'Chef' and command == '8':
+            elif role_name == 'Chef' and command == '9':
                 should_exit = True
             elif role_name == 'Employee' and command == '5':
                 should_exit = True

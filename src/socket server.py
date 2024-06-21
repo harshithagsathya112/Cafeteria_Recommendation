@@ -56,7 +56,7 @@ def handle_client(client_socket, Cafetertia_system):
                     response = Cafetertia_system.execute_user_command(command, employee_id, args)
                 else:
                     response = "Invalid role!"
-                if response == "Logout":
+                if response == "Exit":
                     log_activity(f"User with ID {employee_id} logged out of the system")
                     client_socket.send(response.encode('utf-8'))
                     break
