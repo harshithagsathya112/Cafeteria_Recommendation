@@ -21,6 +21,7 @@ class Employee:
     @staticmethod
     def view_menu(connection, availability_only=False):
         try:
+            connection=create_connection()
             cursor = connection.cursor()
             if availability_only:
                 cursor.execute("SELECT * FROM fooditem WHERE AvailabilityStatus = 1")

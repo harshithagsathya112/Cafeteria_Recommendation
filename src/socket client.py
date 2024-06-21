@@ -1,47 +1,10 @@
 import socket
 import json
+from Support_functions import display_menu
 
 def handle_input_request(prompt):
     response = input(prompt)
     return response
-
-def display_menu(role_name):
-    menu = []
-    if role_name == 'Admin':
-        menu = [
-            "Admin Menu:",
-            "1. Add Menu Item",
-            "2. Update Menu Item",
-            "3. Delete Menu Item",
-            "4. View Menu",
-            "5. Logout"
-        ]
-    elif role_name == 'Chef':
-        menu = [
-            "Chef Menu:",
-            "1. Roll Out Menu for Next Day",
-            "2. View Feedback",
-            "3. Generate Monthly Feedback Report",
-            "4. View Menu",
-            "5. Send Final Menu for Today",
-            "6. View Rollout menu",
-            "7. View Recommendation",
-            "8. View Discard menu List",
-            "9. Logout"
-        ]
-    elif role_name == 'Employee':
-        menu = [
-            "User Menu:",
-            "1. View Menu",
-            "2. Select Food Item",
-            "3. Give Feedback",
-            "4. View Rollout menu",
-            "5. Logout"
-        ]
-    else:
-        raise ValueError("Invalid role name received from server.")
-    
-    return "\n".join(menu)
 
 def process_command(role_name, command):
     args = []
@@ -87,7 +50,7 @@ def main():
         user_name = input("Enter your name: ")
         employee_id = input("Enter your employee ID: ")
 
-        verification_request = f"verify,{user_name},{employee_id}"
+        verification_request = f"verify,{user_name},{employee_id}" 
         client.send(verification_request.encode('utf-8'))
         response = client.recv(1024).decode('utf-8')
 

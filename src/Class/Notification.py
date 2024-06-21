@@ -1,8 +1,16 @@
 from datetime import datetime
 import os,sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from SQLConnect import create_connection
+from SQLConnect import create_connection,execute_read_query,execute_query
 
+def get_notifications(employee_id):
+    connection = create_connection()
+    query = f"SELECT Message FROM notification WHERE UserID = (SELECT UserID FROM user WHERE EmployeeID = '{employee_id}') AND IsRead = 0"
+    notifications = execute_read_query(connection, query)
+    if notifications:
+        update_query = f"UPDATE notification SET IsRead = 1 WHERE UserID = (SELECT UserID FROM user WHERE EmployeeID = '{employee_id}') AND IsRead = 0"
+        execute_query(connection, update_query)
+    return [notification[0] for notification in notifications]
 
 def insert_notification_for_all_users(message):
     connection = create_connection()
