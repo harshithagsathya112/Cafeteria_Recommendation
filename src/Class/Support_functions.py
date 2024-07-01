@@ -27,7 +27,8 @@ def display_menu(role_name):
             "6. View Rollout menu",
             "7. View Recommendation",
             "8. View Discard menu List",
-            "9. Logout"
+            "9. View reposnse for quqestions",
+            "10. Logout"
         ]
     elif role_name == 'Employee':
         menu = [
@@ -36,7 +37,9 @@ def display_menu(role_name):
             "2. Select Food Item",
             "3. Give Feedback",
             "4. View Rollout menu",
-            "5. Logout"
+            "5. View Survey Questions",
+            "6. Give Response for survey.",
+            "7. Logout"
         ]
     else:
         raise ValueError("Invalid role name received from server.")

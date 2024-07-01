@@ -109,3 +109,48 @@ class Employee:
             return "Feedback submitted successfully."
         except Exception as e:
             return f"Error submitting feedback: {e}"
+        
+
+    @staticmethod
+    def get_pending_question(connection, employee_id):
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (employee_id,))
+            result = cursor.fetchone()
+            if not result:
+                return None
+            user_id = result[0]
+
+            query = """
+                SELECT q.question_id, q.question
+                FROM question q
+                LEFT JOIN survey s ON q.question_id = s.question_id AND s.UserID = %s
+                WHERE s.question_id IS NULL
+                ORDER BY q.date_sent DESC
+                """
+            cursor.execute(query, (user_id,))
+            results = cursor.fetchall()
+            if results:
+                questions = "\n".join([f" {question_id}, - '{question_text}'" for question_id, question_text in results])
+                return f"Pending Survey Questions:\n{questions}"
+            return "No pending survey questions."
+        except Exception as e:
+            return None
+        
+    @staticmethod
+    def submit_survey_response(connection, employee_id, question_id, response):
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (employee_id,))
+            result = cursor.fetchone()
+            if not result:
+                return "User not found."
+            user_id = result[0]
+
+            cursor.execute("INSERT INTO survey (UserID, Question_id, response) VALUES (%s, %s, %s)",
+                           (user_id, question_id, response))
+            connection.commit()
+            return "Survey response submitted successfully."
+        except Exception as e:
+            return f"Error submitting survey response: {e}"
+

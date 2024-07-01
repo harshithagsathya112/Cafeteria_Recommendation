@@ -1,5 +1,6 @@
 import socket
-import json
+import json,sys,os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
 from Support_functions import display_menu
 
 def handle_input_request(prompt):
@@ -18,13 +19,19 @@ def process_command(role_name, command):
             args.append(handle_input_request("Enter food price: "))
         elif command == '3':
             args.append(handle_input_request("Enter food id: "))
-    elif role_name == 'Employee' and command in ['2', '3']:
+    elif role_name == 'Employee' and command in ['2', '3','5','6']:
         if command == '2':
             args.append(handle_input_request("Enter food item ID to select: "))
         elif command == '3':
             args.append(handle_input_request("Enter food item ID: "))
             args.append(handle_input_request("Enter your comment: "))
             args.append(handle_input_request("Enter your rating (1-5): "))
+        elif command == '5':
+            pass
+        elif command == '6':
+            args.append(handle_input_request("Enter question ID: "))
+            args.append(handle_input_request("Enter your response: "))
+
     elif role_name == 'Chef' and command in ['1', '5','7','8','Remove','Feedback']:
         if command == '1':
             args.append(handle_input_request("Enter the meal type (e.g., breakfast, lunch, dinner): "))
@@ -76,9 +83,9 @@ def main():
             command = input("Enter your Choice: ")
             if role_name == 'Admin' and command == '5':
                 should_exit = True
-            elif role_name == 'Chef' and command == '9':
+            elif role_name == 'Chef' and command == '10':
                 should_exit = True
-            elif role_name == 'Employee' and command == '5':
+            elif role_name == 'Employee' and command == '7':
                 should_exit = True
 
             args = process_command(role_name, command)

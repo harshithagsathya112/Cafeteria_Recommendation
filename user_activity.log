@@ -510,3 +510,159 @@
 2024-06-21 16:47:52,645 - plugin_name: mysql_native_password
 2024-06-21 16:47:52,647 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
 2024-06-21 16:47:59,101 - User Harsha with ID 1001 logged in as Chef
+2024-06-24 15:34:26,997 - package: mysql.connector.plugins
+2024-06-24 15:34:26,998 - plugin_name: caching_sha2_password
+2024-06-24 15:34:26,998 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-06-24 15:34:27,008 - package: mysql.connector.plugins
+2024-06-24 15:34:27,008 - plugin_name: mysql_native_password
+2024-06-24 15:34:27,014 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-06-24 15:34:27,121 - package: mysql.connector.plugins
+2024-06-24 15:34:27,122 - plugin_name: caching_sha2_password
+2024-06-24 15:34:27,122 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-06-24 15:34:27,125 - package: mysql.connector.plugins
+2024-06-24 15:34:27,127 - plugin_name: mysql_native_password
+2024-06-24 15:34:27,130 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-06-24 15:35:34,545 - User Harsha with ID 1001 logged in as Chef
+2024-07-01 22:28:54,964 - package: mysql.connector.plugins
+2024-07-01 22:28:54,965 - plugin_name: caching_sha2_password
+2024-07-01 22:28:54,965 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 22:28:54,967 - package: mysql.connector.plugins
+2024-07-01 22:28:54,967 - plugin_name: mysql_native_password
+2024-07-01 22:28:54,971 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 22:29:04,014 - User Harsha with ID 1001 logged in as Chef
+2024-07-01 22:30:24,128 - package: mysql.connector.plugins
+2024-07-01 22:30:24,128 - plugin_name: caching_sha2_password
+2024-07-01 22:30:24,128 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 22:30:24,130 - package: mysql.connector.plugins
+2024-07-01 22:30:24,130 - plugin_name: mysql_native_password
+2024-07-01 22:30:24,132 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 22:30:30,987 - User Harsha with ID 1001 logged in as Chef
+2024-07-01 22:30:51,329 - User Tej with ID 1003 logged in as Employee
+2024-07-01 22:32:18,825 - package: mysql.connector.plugins
+2024-07-01 22:32:18,825 - plugin_name: caching_sha2_password
+2024-07-01 22:32:18,825 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 22:32:18,827 - package: mysql.connector.plugins
+2024-07-01 22:32:18,827 - plugin_name: mysql_native_password
+2024-07-01 22:32:18,829 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 22:32:26,076 - User Harsha with ID 1001 logged in as Chef
+2024-07-01 22:33:29,666 - package: mysql.connector.plugins
+2024-07-01 22:33:29,666 - plugin_name: caching_sha2_password
+2024-07-01 22:33:29,666 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 22:33:29,668 - package: mysql.connector.plugins
+2024-07-01 22:33:29,668 - plugin_name: mysql_native_password
+2024-07-01 22:33:29,670 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 22:33:42,579 - User harsha with ID 1001 logged in as Chef
+2024-07-01 22:34:00,182 - User Tej with ID 1003 logged in as Employee
+2024-07-01 22:34:40,747 - package: mysql.connector.plugins
+2024-07-01 22:34:40,747 - plugin_name: caching_sha2_password
+2024-07-01 22:34:40,747 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 22:34:40,749 - package: mysql.connector.plugins
+2024-07-01 22:34:40,749 - plugin_name: mysql_native_password
+2024-07-01 22:34:40,751 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 22:34:47,946 - User Harsha with ID 1001 logged in as Chef
+2024-07-01 22:35:01,178 - User Tej with ID 1003 logged in as Employee
+2024-07-01 23:00:22,698 - package: mysql.connector.plugins
+2024-07-01 23:00:22,698 - plugin_name: caching_sha2_password
+2024-07-01 23:00:22,699 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:00:22,700 - package: mysql.connector.plugins
+2024-07-01 23:00:22,701 - plugin_name: mysql_native_password
+2024-07-01 23:00:22,702 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:00:36,178 - User tej with ID 1003 logged in as Employee
+2024-07-01 23:06:38,190 - package: mysql.connector.plugins
+2024-07-01 23:06:38,190 - plugin_name: caching_sha2_password
+2024-07-01 23:06:38,190 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:06:38,192 - package: mysql.connector.plugins
+2024-07-01 23:06:38,192 - plugin_name: mysql_native_password
+2024-07-01 23:06:38,194 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:06:48,958 - User Tej with ID 1003 logged in as Employee
+2024-07-01 23:07:42,167 - User tej with ID 1003 logged in as Employee
+2024-07-01 23:11:17,077 - package: mysql.connector.plugins
+2024-07-01 23:11:17,077 - plugin_name: caching_sha2_password
+2024-07-01 23:11:17,077 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:11:17,077 - package: mysql.connector.plugins
+2024-07-01 23:11:17,077 - plugin_name: mysql_native_password
+2024-07-01 23:11:17,077 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:11:28,289 - User Tej with ID 1003 logged in as Employee
+2024-07-01 23:12:39,155 - package: mysql.connector.plugins
+2024-07-01 23:12:39,155 - plugin_name: caching_sha2_password
+2024-07-01 23:12:39,155 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:12:39,155 - package: mysql.connector.plugins
+2024-07-01 23:12:39,155 - plugin_name: mysql_native_password
+2024-07-01 23:12:39,155 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:12:49,948 - User tej with ID 1003 logged in as Employee
+2024-07-01 23:21:05,843 - package: mysql.connector.plugins
+2024-07-01 23:21:05,843 - plugin_name: caching_sha2_password
+2024-07-01 23:21:05,843 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:21:05,845 - package: mysql.connector.plugins
+2024-07-01 23:21:05,845 - plugin_name: mysql_native_password
+2024-07-01 23:21:05,847 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:21:15,019 - User Tej with ID 1003 logged in as Employee
+2024-07-01 23:21:58,186 - package: mysql.connector.plugins
+2024-07-01 23:21:58,186 - plugin_name: caching_sha2_password
+2024-07-01 23:21:58,186 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:21:58,188 - package: mysql.connector.plugins
+2024-07-01 23:21:58,188 - plugin_name: mysql_native_password
+2024-07-01 23:21:58,190 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:22:04,055 - User tej with ID 1003 logged in as Employee
+2024-07-01 23:26:44,861 - package: mysql.connector.plugins
+2024-07-01 23:26:44,861 - plugin_name: caching_sha2_password
+2024-07-01 23:26:44,861 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:26:44,863 - package: mysql.connector.plugins
+2024-07-01 23:26:44,863 - plugin_name: mysql_native_password
+2024-07-01 23:26:44,865 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:26:52,656 - User Tej with ID 1003 logged in as Employee
+2024-07-01 23:31:38,076 - package: mysql.connector.plugins
+2024-07-01 23:31:38,076 - plugin_name: caching_sha2_password
+2024-07-01 23:31:38,076 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:31:38,078 - package: mysql.connector.plugins
+2024-07-01 23:31:38,078 - plugin_name: mysql_native_password
+2024-07-01 23:31:38,081 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:31:45,812 - User tej with ID 1003 logged in as Employee
+2024-07-01 23:38:35,716 - package: mysql.connector.plugins
+2024-07-01 23:38:35,716 - plugin_name: caching_sha2_password
+2024-07-01 23:38:35,716 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:38:35,718 - package: mysql.connector.plugins
+2024-07-01 23:38:35,718 - plugin_name: mysql_native_password
+2024-07-01 23:38:35,720 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:38:43,584 - User Tej with ID 1003 logged in as Employee
+2024-07-01 23:40:20,838 - User tej with ID 1003 logged in as Employee
+2024-07-01 23:40:44,397 - package: mysql.connector.plugins
+2024-07-01 23:40:44,397 - plugin_name: caching_sha2_password
+2024-07-01 23:40:44,397 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:40:44,397 - package: mysql.connector.plugins
+2024-07-01 23:40:44,397 - plugin_name: mysql_native_password
+2024-07-01 23:40:44,397 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:40:50,924 - User Tej with ID 1003 logged in as Employee
+2024-07-01 23:41:16,213 - User harsha with ID 1001 logged in as Chef
+2024-07-01 23:42:19,887 - User Tej with ID 1003 logged in as Employee
+2024-07-01 23:56:55,431 - package: mysql.connector.plugins
+2024-07-01 23:56:55,431 - plugin_name: caching_sha2_password
+2024-07-01 23:56:55,431 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:56:55,434 - package: mysql.connector.plugins
+2024-07-01 23:56:55,434 - plugin_name: mysql_native_password
+2024-07-01 23:56:55,436 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:57:00,536 - package: mysql.connector.plugins
+2024-07-01 23:57:00,536 - plugin_name: caching_sha2_password
+2024-07-01 23:57:00,536 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:57:00,538 - package: mysql.connector.plugins
+2024-07-01 23:57:00,538 - plugin_name: mysql_native_password
+2024-07-01 23:57:00,540 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:58:24,547 - package: mysql.connector.plugins
+2024-07-01 23:58:24,547 - plugin_name: caching_sha2_password
+2024-07-01 23:58:24,547 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:58:24,547 - package: mysql.connector.plugins
+2024-07-01 23:58:24,547 - plugin_name: mysql_native_password
+2024-07-01 23:58:24,547 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-01 23:59:29,717 - package: mysql.connector.plugins
+2024-07-01 23:59:29,717 - plugin_name: caching_sha2_password
+2024-07-01 23:59:29,717 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-01 23:59:29,717 - package: mysql.connector.plugins
+2024-07-01 23:59:29,717 - plugin_name: mysql_native_password
+2024-07-01 23:59:29,717 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-02 00:00:01,379 - package: mysql.connector.plugins
+2024-07-02 00:00:01,379 - plugin_name: caching_sha2_password
+2024-07-02 00:00:01,379 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-02 00:00:01,394 - package: mysql.connector.plugins
+2024-07-02 00:00:01,394 - plugin_name: mysql_native_password
+2024-07-02 00:00:01,394 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-02 00:00:15,565 - User harsha with ID 1001 logged in as Chef

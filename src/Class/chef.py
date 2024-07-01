@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from Notification import insert_notification_for_all_users
 
+
 class Chef:
     def __init__(self, user_id, employee_id, name, role_id, password):
         self.user_id = user_id
@@ -79,9 +80,47 @@ class Chef:
 
         connection.commit()
         return "Food item is added for today's menu "
+    
+    def view_feedback_for_questions(self,connection):
+        try:
+            cursor = connection.cursor()
+
+            # Query to get all questions with their feedback
+            query = """
+                SELECT q.question_id, q.question, s.response
+                FROM question q
+                LEFT JOIN survey s ON q.question_id = s.question_id
+                ORDER BY q.date_sent DESC, q.question_id ASC
+            """
+            cursor.execute(query)
+            results = cursor.fetchall()
+
+            if not results:
+                return "No feedback available."
+
+            formatted_feedback = ""
+            current_question_id = None
+
+            for question_id, question_text, response in results:
+                if question_id != current_question_id:
+                    if current_question_id is not None:
+                        formatted_feedback += "\n"
+                    formatted_feedback += f"Question ID: {question_id}\nQuestion: {question_text}\nResponses:\n"
+                    current_question_id = question_id
+
+                if response:
+                    formatted_feedback += f"- {response}\n"
+                else:
+                    formatted_feedback += "- No response yet\n"
+
+            return formatted_feedback
+        except Exception as e:
+            return f"Error fetching feedback for questions: {e}"
+        
+
 
 def view_rolled_out_menu_for_today(connection):
-        try:
+    try:
             cursor = connection.cursor()
             previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
             query = """
@@ -99,5 +138,7 @@ def view_rolled_out_menu_for_today(connection):
                 return "\n".join(rolled_out_menu)
             else:
                 return "No menu items rolled out for today."
-        except Exception as e:
+    except Exception as e:
             return f"Error fetching today's rolled-out menu: {e}"
+        
+    

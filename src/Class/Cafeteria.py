@@ -121,8 +121,9 @@ class Cafeteria:
             food_item_id_to_get_feedback = int(args[0])
             engine.request_detailed_feedback(food_item_id_to_get_feedback)
             return "feedback sent successfully"
-
         elif choice == '9':
+            return chef.view_feedback_for_questions(self.connection)
+        elif choice == '10':
             return "Logout"
         else:
             return "Invalid choice!"
@@ -156,6 +157,11 @@ class Cafeteria:
         elif choice == '4':
             return view_rolled_out_menu_for_today(self.connection)
         elif choice == '5':
+            return Employee.get_pending_question(self.connection,employee_id)
+        elif choice == '6':
+            question_id, response = args
+            return Employee.submit_survey_response(self.connection, employee_id, question_id, response)
+        elif choice == '7':
             return "Logout"
         else:
             return "Invalid choice!"

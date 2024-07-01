@@ -152,10 +152,19 @@ class RecommendationEngine:
             f"How would you like {food_name} to taste?",
             "Share your mom’s recipe."
         ]
-        questions.append(f"\nWe are trying to improve your experience with {food_name}. Please provide your feedback and help us.")
         for question in questions:
+            question_id = self.insert_question(question)
             insert_notification_for_all_users(question)
+
+        questions.append(f"\nWe are trying to improve your experience with {food_name}. Please provide your feedback and help us.")
+        insert_notification_for_all_users(f"\nWe are trying to improve your experience with {food_name}. Please provide your feedback and help us.")
         return questions
+    
+    def insert_question(self, question_text):
+        cursor = self.connection.cursor()
+        cursor.execute("INSERT INTO question (Question, date_sent) VALUES (%s, CURDATE())", (question_text,))
+        self.connection.commit()
+        return cursor.lastrowid
 
 if __name__ == "__main__":
     connection = create_connection()
