@@ -1,3 +1,4 @@
+import json
 import sys
 import os
 from datetime import datetime, timedelta
@@ -19,39 +20,40 @@ class Employee:
         return None
 
     @staticmethod
-    def view_menu(connection, availability_only=False):
+    def view_menu(connection, employee_id, availability_only=False):
         try:
-            connection=create_connection()
             cursor = connection.cursor()
+            cursor.execute("SELECT dietary_preference, spice_level, preferred_cuisine, sweet_tooth FROM user WHERE EmployeeID = %s", (employee_id,))
+            user = cursor.fetchone()
+            if not user:
+                return "User not found."
+
+            dietary_preference, spice_level, preferred_cuisine, sweet_tooth = user
+
             if availability_only:
                 cursor.execute("SELECT * FROM fooditem WHERE AvailabilityStatus = 1")
             else:
                 cursor.execute("SELECT * FROM fooditem")
-            result = cursor.fetchall()
-        
-            menu = ["Menu:"]
-            engine = None
-        
-            if availability_only:
-                engine = RecommendationEngine(connection)
-        
-            for row in result:
-                food_item_id = row[0]
-                food_name = row[1]
-                food_price = row[2]
-                availability_status = "Available" if row[3] else "Not Available"
+            food_items = cursor.fetchall()
+
             
-                if availability_only and engine:
-                    _, average_rating, sentiment_category = engine.analyze_feedback(food_item_id)
-                    menu.append(
-                        f"ID: {food_item_id}, Name: {food_name}, Price: {food_price}, Available: {availability_status}, "
-                        f"Average Rating: {average_rating:.2f}, Sentiment: {sentiment_category}"
-                    )
-                else:
-                    menu.append(
-                        f"ID: {food_item_id}, Name: {food_name}, Price: {food_price}, Available: {availability_status}"
-                    )
-                
+            def sort_key(item):
+                score = 0
+                if dietary_preference == item[4]:  # dietary_type
+                    score += 10
+                if spice_level == item[5]:  # spice_level
+                    score += 5
+                if preferred_cuisine == item[6]:  # cuisine
+                    score += 3
+                if sweet_tooth and item[7]:  # is_sweet
+                    score += 2
+                return score
+
+            sorted_food_items = sorted(food_items, key=sort_key, reverse=True)
+            menu = ["Menu:"]
+            for item in sorted_food_items:
+                menu.append(f"ID: {item[0]}, Name: {item[1]}, Price: {item[2]}, Available: {item[3]}")
+
             return "\n".join(menu)
         except Exception as e:
             return f"Error fetching menu: {e}"
@@ -153,4 +155,19 @@ class Employee:
             return "Survey response submitted successfully."
         except Exception as e:
             return f"Error submitting survey response: {e}"
+        
+    def update_employee_profile(connection,dietary_preference,spice_level,preferred_cuisine,sweet_tooth,employee_id):
+        try:
+            cursor = connection.cursor()
+            query = """
+                UPDATE user
+                SET dietary_preference = %s, spice_level = %s, preferred_cuisine = %s, sweet_tooth = %s
+                WHERE EmployeeID = %s
+            """
+            cursor.execute(query, (dietary_preference, spice_level, preferred_cuisine, sweet_tooth,employee_id))
+            connection.commit()
+            return "Profile updated successfully."
+        except Exception as e:
+            print(f"Error updating profile: {e}")
+            return f"Error: {e}"
 

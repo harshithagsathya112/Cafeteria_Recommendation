@@ -130,7 +130,7 @@ class Cafeteria:
 
     def execute_user_command(self, choice, employee_id, args):
         if choice == '1':
-            return Employee.view_menu(self.connection, availability_only=True)
+            return Employee.view_menu(self.connection,employee_id, availability_only=True)
         elif choice == '2':
             food_item_id = args[0]
             try:
@@ -155,18 +155,21 @@ class Cafeteria:
             except Exception as e:
                 return f"Error giving feedback: {e}"
         elif choice == '4':
-            return view_rolled_out_menu_for_today(self.connection)
+            return view_rolled_out_menu_for_today(self.connection,employee_id)
         elif choice == '5':
             return Employee.get_pending_question(self.connection,employee_id)
         elif choice == '6':
             question_id, response = args
             return Employee.submit_survey_response(self.connection, employee_id, question_id, response)
         elif choice == '7':
+            dietary_preference,spice_level,preferred_cuisine,sweet_tooth = args
+            return Employee.update_employee_profile(self.connection, dietary_preference,spice_level,preferred_cuisine,sweet_tooth ,employee_id )
+        elif choice == '8':
             return "Logout"
         else:
             return "Invalid choice!"
 
-    def view_menu(self, availability_only=False):
+    def view_menu(self,employee_id, availability_only=False):
         return Employee.view_menu(self.connection, availability_only)
 
     def food_item_exists(self, food_item_id):

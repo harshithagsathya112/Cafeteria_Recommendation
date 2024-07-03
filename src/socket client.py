@@ -7,6 +7,45 @@ def handle_input_request(prompt):
     response = input(prompt)
     return response
 
+def validate_input(prompt, valid_options):
+    while True:
+        response = input(prompt).strip()
+        if response in valid_options:
+            return response
+        else:
+            print(f"Invalid input. Please enter one of the following: {', '.join(valid_options)}")
+
+def update_profile():
+    dietary_preference = validate_input(
+        "1) Please select one - Vegetarian, Non Vegetarian, Eggetarian: ", 
+        ['Vegetarian', 'Non Vegetarian', 'Eggetarian']
+    )
+    spice_level = validate_input(
+        "2) Please select your spice level - High, Medium, Low: ", 
+        ['High', 'Medium', 'Low']
+    )
+    preferred_cuisine = validate_input(
+        "3) What do you prefer most? - North Indian, South Indian, Other: ", 
+        ['North Indian', 'South Indian', 'Other']
+    )
+    sweet_tooth = validate_input(
+        "4) Do you have a sweet tooth? - Yes, No: ", 
+        ['Yes', 'No']
+    )
+    
+    sweet_tooth = 1 if sweet_tooth == 'Yes' else 0
+    
+
+    profile_data = [
+        dietary_preference,
+        spice_level,
+        preferred_cuisine,
+        sweet_tooth,
+        ]
+
+    return profile_data
+
+
 def process_command(role_name, command):
     args = []
     if role_name == 'Admin' and command in ['1', '2', '3']:
@@ -19,7 +58,7 @@ def process_command(role_name, command):
             args.append(handle_input_request("Enter food price: "))
         elif command == '3':
             args.append(handle_input_request("Enter food id: "))
-    elif role_name == 'Employee' and command in ['2', '3','5','6']:
+    elif role_name == 'Employee' and command in ['2', '3','5','6','7']:
         if command == '2':
             args.append(handle_input_request("Enter food item ID to select: "))
         elif command == '3':
@@ -31,6 +70,9 @@ def process_command(role_name, command):
         elif command == '6':
             args.append(handle_input_request("Enter question ID: "))
             args.append(handle_input_request("Enter your response: "))
+        elif command == '7':
+            args=update_profile()
+            args = [str(arg) for arg in args]
 
     elif role_name == 'Chef' and command in ['1', '5','7','8','Remove','Feedback']:
         if command == '1':
@@ -85,10 +127,11 @@ def main():
                 should_exit = True
             elif role_name == 'Chef' and command == '10':
                 should_exit = True
-            elif role_name == 'Employee' and command == '7':
+            elif role_name == 'Employee' and command == '8':
                 should_exit = True
 
             args = process_command(role_name, command)
+            
             request = f"{role_name},{verified_employee_id},{command},{','.join(args)}"
             client.send(request.encode('utf-8'))
             response = client.recv(1024).decode('utf-8')

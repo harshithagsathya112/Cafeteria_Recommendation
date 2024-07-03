@@ -39,7 +39,8 @@ def display_menu(role_name):
             "4. View Rollout menu",
             "5. View Survey Questions",
             "6. Give Response for survey.",
-            "7. Logout"
+            "7. Update Profile",
+            "8. Logout"
         ]
     else:
         raise ValueError("Invalid role name received from server.")

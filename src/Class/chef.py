@@ -117,28 +117,55 @@ class Chef:
         except Exception as e:
             return f"Error fetching feedback for questions: {e}"
         
+from datetime import datetime, timedelta
 
-
-def view_rolled_out_menu_for_today(connection):
+def view_rolled_out_menu_for_today(connection, employee_id):
     try:
-            cursor = connection.cursor()
-            previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
-            query = """
-            SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType
-            FROM menu
-            JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
-            WHERE menu.Date = %s
-            """
-            cursor.execute(query, (previous_date,))
-            result = cursor.fetchall()
-            if result:
-                rolled_out_menu = ["Rolled Out Menu for Today:"]
-                for row in result:
-                    rolled_out_menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Meal Type: {row[3]}")
-                return "\n".join(rolled_out_menu)
-            else:
-                return "No menu items rolled out for today."
-    except Exception as e:
-            return f"Error fetching today's rolled-out menu: {e}"
+        cursor = connection.cursor()
         
+        # Retrieve user preferences
+        cursor.execute("SELECT dietary_preference, spice_level, preferred_cuisine, sweet_tooth FROM user WHERE EmployeeID = %s", (employee_id,))
+        user = cursor.fetchone()
+        if not user:
+            return "User not found."
+        
+        dietary_preference, spice_level, preferred_cuisine, sweet_tooth = user
+        
+        # Fetch rolled out menu items
+        previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+        query = """
+        SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType, fooditem.DietaryType, fooditem.SpiceLevel, fooditem.Cuisine, fooditem.IsSweet
+        FROM menu
+        JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
+        WHERE menu.Date = %s
+        """
+        cursor.execute(query, (previous_date,))
+        result = cursor.fetchall()
+        
+        if not result:
+            return "No menu items rolled out for today."
+        
+        # Define sorting key function
+        def sort_key(item):
+            score = 0
+            if dietary_preference == item[4]:  # dietary_type
+                score += 10
+            if spice_level == item[5]:  # spice_level
+                score += 5
+            if preferred_cuisine == item[6]:  # cuisine
+                score += 3
+            if sweet_tooth and item[7]:  # is_sweet
+                score += 2
+            return score
+
+        # Sort menu items based on user preferences
+        sorted_menu = sorted(result, key=sort_key, reverse=True)
+        
+        rolled_out_menu = ["Rolled Out Menu for Today:"]
+        for row in sorted_menu:
+            rolled_out_menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Meal Type: {row[3]}")
+        
+        return "\n".join(rolled_out_menu)
     
+    except Exception as e:
+        return f"Error fetching today's rolled-out menu: {e}"
