@@ -1,10 +1,8 @@
-import json
 import sys
 import os
 from datetime import datetime, timedelta
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
-from Recommendation_System import RecommendationEngine
-from SQLConnect import create_connection, execute_read_query, execute_query
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from SQLConnect import create_connection, execute_read_query
 
 class Employee:
     def __init__(self, name, employeeid):
@@ -39,14 +37,14 @@ class Employee:
             
             def sort_key(item):
                 score = 0
-                if dietary_preference == item[4]:  # dietary_type
-                    score += 10
-                if spice_level == item[5]:  # spice_level
+                if dietary_preference == item[4]: 
+                    score += 40
+                if spice_level == item[5]:
                     score += 5
-                if preferred_cuisine == item[6]:  # cuisine
+                if preferred_cuisine == item[6]:
                     score += 3
-                if sweet_tooth and item[7]:  # is_sweet
-                    score += 2
+                if sweet_tooth and item[7]:
+                    score+=10
                 return score
 
             sorted_food_items = sorted(food_items, key=sort_key, reverse=True)

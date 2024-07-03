@@ -41,7 +41,7 @@ def update_profile():
         spice_level,
         preferred_cuisine,
         sweet_tooth,
-        ]
+    ]
 
     return profile_data
 
@@ -58,6 +58,7 @@ def process_command(role_name, command):
             args.append(handle_input_request("Enter food price: "))
         elif command == '3':
             args.append(handle_input_request("Enter food id: "))
+
     elif role_name == 'Employee' and command in ['2', '3','5','6','7']:
         if command == '2':
             args.append(handle_input_request("Enter food item ID to select: "))

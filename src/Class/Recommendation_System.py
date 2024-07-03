@@ -1,11 +1,11 @@
 import os
 import sys
 from datetime import datetime, timedelta
-from Admin import Admin
-from Notification import insert_notification_for_all_users
-from Support_functions import get_food_name
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(project_root)
+from Class.Admin import Admin
+from Class.Notification import insert_notification_for_all_users
+from Class.Support_functions import get_food_name
 from SQLConnect import create_connection, execute_read_query
 
 class RecommendationEngine:

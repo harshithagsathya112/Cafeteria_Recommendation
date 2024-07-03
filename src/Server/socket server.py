@@ -3,8 +3,8 @@ import threading
 import sys
 import os
 from ClientHandler import handle_client
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
-from Cafeteria import Cafeteria
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from Server.Controller import Controller
 from SQLConnect import create_connection
 
 def main():
@@ -14,7 +14,7 @@ def main():
     server.listen(10)
     print("Server listening on port 9999")
     connection = create_connection()
-    Cafetertia_system =Cafeteria(connection)
+    Cafetertia_system =Controller(connection)
     while True:
         client_socket, addr = server.accept()
         print(f"Accepted connection from {addr}")

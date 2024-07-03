@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SQLConnect import create_connection
-from Notification import insert_notification_for_all_users
+from Class.Notification import insert_notification_for_all_users
 
 class Admin:
     def __init__(self):
