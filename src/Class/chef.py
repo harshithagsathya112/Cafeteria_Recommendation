@@ -10,16 +10,31 @@ class Chef:
         self.role_id = role_id
         self.password = password
 
+    def Fetch_Food_Items(self,connection):
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM fooditem")
+            food_items = cursor.fetchall()
+            menu = ["Menu:"]
+            for item in food_items:
+                menu.append(f"ID: {item[0]}, Name: {item[1]}, Price: {item[2]}, Available: {item[3]}")
+            return "\n".join(menu)
+        except Exception as e:
+            return f"Error fetching menu: {e}"
+
+
     def roll_out_menu(self, connection, meal_type, food_item_id):
         date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
 
         cursor = connection.cursor()
         cursor.execute("INSERT INTO menu (Date, MealType, FoodItemID) VALUES (%s, %s, %s)", 
                        (date, meal_type, food_item_id))
-        cursor.execute("SELECT ItemName FROM fooditem WHERE FoodItemID = %s", (food_item_id,))
-        food_name = cursor.fetchone()[0]
+        cursor.execute("SELECT ItemName,dietary_type FROM fooditem WHERE FoodItemID = %s", (food_item_id,))
+        result = cursor.fetchone()[0]
+        food_name ,dietary_type= result
         message = f"{food_name} has been add in rolled out menu."
-        insert_notification_for_all_users(message)
+        print(dietary_type)
+        insert_notification_for_all_users(message,dietary_type)
         connection.commit()
         return "Menu rolled out for the next day."
 
@@ -117,24 +132,28 @@ class Chef:
         except Exception as e:
             return f"Error fetching feedback for questions: {e}"
         
-from datetime import datetime, timedelta
 
 def view_rolled_out_menu_for_today(connection, employee_id):
     try:
         cursor = connection.cursor()
+        cursor.execute("SELECT RoleName FROM role JOIN user ON role.RoleID = user.RoleID WHERE user.EmployeeID = %s", (employee_id,))
+        role = cursor.fetchone()
+        if not role:
+            return "Role not found."
         
-        # Retrieve user preferences
-        cursor.execute("SELECT dietary_preference, spice_level, preferred_cuisine, sweet_tooth FROM user WHERE EmployeeID = %s", (employee_id,))
-        user = cursor.fetchone()
-        if not user:
-            return "User not found."
-        
-        dietary_preference, spice_level, preferred_cuisine, sweet_tooth = user
-        
-        # Fetch rolled out menu items
+        role_name = role[0]
+
+        if role_name != "Chef":
+            cursor.execute("SELECT dietary_preference, spice_level, preferred_cuisine, sweet_tooth FROM user WHERE EmployeeID = %s", (employee_id,))
+            user = cursor.fetchone()
+            if not user:
+                return "User not found."
+            
+            dietary_preference, spice_level, preferred_cuisine, sweet_tooth = user
+
         previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
         query = """
-        SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType, fooditem.DietaryType, fooditem.SpiceLevel, fooditem.Cuisine, fooditem.IsSweet
+        SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType, fooditem.dietary_type, fooditem.spice_level, fooditem.cuisine, fooditem.is_sweet
         FROM menu
         JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
         WHERE menu.Date = %s
@@ -145,24 +164,24 @@ def view_rolled_out_menu_for_today(connection, employee_id):
         if not result:
             return "No menu items rolled out for today."
         
-        # Define sorting key function
-        def sort_key(item):
-            score = 0
-            if dietary_preference == item[4]:  # dietary_type
-                score += 10
-            if spice_level == item[5]:  # spice_level
-                score += 5
-            if preferred_cuisine == item[6]:  # cuisine
-                score += 3
-            if sweet_tooth and item[7]:  # is_sweet
-                score += 2
-            return score
+        if role_name != "Chef":
 
-        # Sort menu items based on user preferences
-        sorted_menu = sorted(result, key=sort_key, reverse=True)
+            def sort_key(item):
+                score = 0
+                if dietary_preference == item[4]: 
+                    score += 40
+                if spice_level == item[5]: 
+                    score += 5
+                if preferred_cuisine == item[6]: 
+                    score += 3
+                if sweet_tooth and item[7]: 
+                    score += 10
+                return score
+
+            result = sorted(result, key=sort_key, reverse=True)
         
         rolled_out_menu = ["Rolled Out Menu for Today:"]
-        for row in sorted_menu:
+        for row in result:
             rolled_out_menu.append(f"ID: {row[0]}, Name: {row[1]}, Price: {row[2]}, Meal Type: {row[3]}")
         
         return "\n".join(rolled_out_menu)

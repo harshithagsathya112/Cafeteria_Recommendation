@@ -20,7 +20,7 @@ class Employee:
         return None
 
     @staticmethod
-    def view_menu(connection, employee_id, availability_only=False):
+    def view_menu(connection, employee_id=None, availability_only=False):
         try:
             cursor = connection.cursor()
             cursor.execute("SELECT dietary_preference, spice_level, preferred_cuisine, sweet_tooth FROM user WHERE EmployeeID = %s", (employee_id,))

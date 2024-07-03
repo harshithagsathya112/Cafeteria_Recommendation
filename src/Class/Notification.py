@@ -12,12 +12,12 @@ def get_notifications(employee_id):
         execute_query(connection, update_query)
     return [notification[0] for notification in notifications]
 
-def insert_notification_for_all_users(message):
+def insert_notification_for_all_users(message,dietary_type=None):
     connection = create_connection()
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT u.UserID 
+        SELECT u.UserID ,u.dietary_preference
         FROM user u
         JOIN role r ON u.RoleID = r.RoleID 
         WHERE r.RoleName = 'Employee'
@@ -26,9 +26,17 @@ def insert_notification_for_all_users(message):
 
     today_date = datetime.today().strftime('%Y-%m-%d')
     for user in users:
-        cursor.execute("INSERT INTO notification (Message, NotificationDate, IsRead, UserID) VALUES (%s, %s, %s, %s)",
-                       (message, today_date, 0, user[0]))
+        user_id, dietary_preference = user
+        if dietary_type is None:
+            cursor.execute("INSERT INTO notification (Message, NotificationDate, IsRead, UserID) VALUES (%s, %s, %s, %s)",
+                           (message, today_date, 0, user_id))
+        elif dietary_type.lower() == 'vegetarian' and dietary_preference.lower() == 'vegetarian':
+            cursor.execute("INSERT INTO notification (Message, NotificationDate, IsRead, UserID) VALUES (%s, %s, %s, %s)",
+                           (message, today_date, 0, user_id))
 
+        else :
+            cursor.execute("INSERT INTO notification (Message, NotificationDate, IsRead, UserID) VALUES (%s, %s, %s, %s)",
+                           (message, today_date, 0, user_id))
     connection.commit()
     connection.close()
 

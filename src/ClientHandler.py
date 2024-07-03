@@ -36,7 +36,7 @@ def handle_client(client_socket, Cafetertia_system):
                         log_activity(f"User logged out of the system")
                     response = Cafetertia_system.execute_admin_command(command, args)   
                 elif role_name == 'Chef':
-                    response = Cafetertia_system.execute_chef_command(command, args)
+                    response = Cafetertia_system.execute_chef_command(command, employee_id, args)
                 elif role_name == 'Employee':
                     response = Cafetertia_system.execute_user_command(command, employee_id, args)
                 else:

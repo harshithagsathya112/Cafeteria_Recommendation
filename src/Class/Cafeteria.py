@@ -67,8 +67,8 @@ class Cafeteria:
         else:
             return "Invalid choice!"
 
-    def execute_chef_command(self, choice, args):
-        chef = Chef(None, None, None, None, None)
+    def execute_chef_command(self,choice,employee_id, args):
+        chef = Chef(None, employee_id, None, None, None)
         engine = RecommendationEngine(self.connection)
         if choice == '1':
             meal_type, food_item_id = args
@@ -84,7 +84,7 @@ class Cafeteria:
         elif choice == '3':
             return chef.generate_report(self.connection)
         elif choice == '4':
-            return self.view_menu()
+            return chef.Fetch_Food_Items(self.connection)
         elif choice == '5':
             meal_type, food_item_id = args
             try:
@@ -95,7 +95,7 @@ class Cafeteria:
             except Exception as e:
                 return f"Error sending final menu: {e}"
         elif choice == '6':
-            return view_rolled_out_menu_for_today(self.connection)
+            return view_rolled_out_menu_for_today(self.connection,chef.employee_id)
         elif choice == '7':
             no_items_recommended = int(args[0])
             engine = RecommendationEngine(self.connection)
@@ -169,7 +169,7 @@ class Cafeteria:
         else:
             return "Invalid choice!"
 
-    def view_menu(self,employee_id, availability_only=False):
+    def view_menu(self,availability_only=False):
         return Employee.view_menu(self.connection, availability_only)
 
     def food_item_exists(self, food_item_id):
