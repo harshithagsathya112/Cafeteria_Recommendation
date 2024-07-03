@@ -29,12 +29,11 @@ class Chef:
         cursor = connection.cursor()
         cursor.execute("INSERT INTO menu (Date, MealType, FoodItemID) VALUES (%s, %s, %s)", 
                        (date, meal_type, food_item_id))
-        cursor.execute("SELECT ItemName,dietary_type FROM fooditem WHERE FoodItemID = %s", (food_item_id,))
-        result = cursor.fetchone()[0]
-        food_name ,dietary_type= result
+        cursor.execute("SELECT ItemName FROM fooditem WHERE FoodItemID = %s", (food_item_id,))
+        food_name= cursor.fetchone()[0]
+        
         message = f"{food_name} has been add in rolled out menu."
-        print(dietary_type)
-        insert_notification_for_all_users(message,dietary_type)
+        insert_notification_for_all_users(message)
         connection.commit()
         return "Menu rolled out for the next day."
 
