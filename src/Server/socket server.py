@@ -1,25 +1,22 @@
-import socket
-import threading
 import sys
 import os
-from ClientHandler import handle_client
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from Server.Controller import Controller
-from SQLConnect import create_connection
+import socket
+from Controller import ClientHandler
 
 def main():
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  
-    server.bind(("0.0.0.0", 9999))
-    server.listen(10)
-    print("Server listening on port 9999")
-    connection = create_connection()
-    Cafetertia_system =Controller(connection)
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    sys.path.append(project_root)
+    
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(("0.0.0.0", 9999))
+    server_socket.listen(5)
+    print("Server listening on port 9999...")
+
     while True:
-        client_socket, addr = server.accept()
+        client_socket, addr = server_socket.accept()
         print(f"Accepted connection from {addr}")
-        client_handler = threading.Thread(target=handle_client, args=(client_socket, Cafetertia_system))
-        client_handler.start()
+        handler = ClientHandler(client_socket)
+        handler.handle_client()
 
 if __name__ == "__main__":
     main()
