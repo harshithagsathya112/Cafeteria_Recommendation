@@ -6,15 +6,16 @@ sys.path.append(project_root)
 from Models.Admin import Admin
 from Models.Notification import Notification
 from Models.Support_functions import get_food_name
-from Database.SQLConnect import create_connection, execute_read_query
+from Database.SQLConnect import execute_read_query
 
 class RecommendationEngine:
+
     def __init__(self, connection):
         self.connection = connection
         base_dir = os.path.dirname(os.path.dirname(__file__))
         sentiment_file_path = os.path.join(base_dir, 'Data', 'sentiment_words.txt')
         self.positive_words, self.negative_words = self.load_sentiment_words(sentiment_file_path)
-        self.admin = Admin()
+        self.admin = Admin(connection)
         self.Notification=Notification()
 
     def load_sentiment_words(self, sentiment_words_file):
@@ -126,28 +127,8 @@ class RecommendationEngine:
 
         return discard_list
 
-    def console_options(self):
-        discard_list = self.generate_discard_list()
-        print("Discard Menu Item List:")
-        for item in discard_list:
-            print(f"- ID: {item[0]}, Name: {item[1]} (Rating: {item[2]:.2f}, Sentiment: {item[3]})")
-
-        print("\nConsole Options:")
-        print("1) Remove the Food Item from Menu List")
-        print("2) Get Detailed Feedback")
-
-        choice = input("\nEnter your choice (1 or 2): ")
-        if choice == '1':
-            food_item_to_remove = input("Enter the food item id to remove from menu: ")
-            self.admin.delete_food_item(food_item_to_remove)
-        elif choice == '2':
-            food_item_to_improve = input("Enter the food item name to get detailed feedback: ")
-            self.request_detailed_feedback(food_item_to_improve)
-        else:
-            print("Invalid choice.")
-
     def request_detailed_feedback(self, food_item_id):
-        food_name=get_food_name(food_item_id)
+        food_name=get_food_name(self.connection,food_item_id)
         questions = [
             f"What didn’t you like about {food_name}?",
             f"How would you like {food_name} to taste?",
@@ -155,10 +136,10 @@ class RecommendationEngine:
         ]
         for question in questions:
             question_id = self.insert_question(question)
-            self.Notification.insert_notification_for_all_users(question)
+            self.Notification.send_notification_to_all_users(self.connection,question)
 
         questions.append(f"\nWe are trying to improve your experience with {food_name}. Please provide your feedback and help us.")
-        self.Notification.insert_notification_for_all_users(f"\nWe are trying to improve your experience with {food_name}. Please provide your feedback and help us.")
+        self.Notification.send_notification_to_all_users(self.connection,f"\nWe are trying to improve your experience with {food_name}. Please provide your feedback and help us.")
         return questions
     
     def insert_question(self, question_text):
@@ -167,9 +148,3 @@ class RecommendationEngine:
         self.connection.commit()
         return cursor.lastrowid
 
-if __name__ == "__main__":
-    connection = create_connection()
-    engine = RecommendationEngine(connection)
-    top_recommendations = engine.recommend_items(top_n=3)
-    print(top_recommendations)
-    engine.console_options()

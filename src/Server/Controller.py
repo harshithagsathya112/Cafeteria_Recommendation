@@ -8,13 +8,13 @@ sys.path.append(project_root)
 from Models.Notification import Notification
 from Models.UserLogin import User
 from User_Services import User_Service
-from Database.SQLConnect import create_connection
+from Database.SQLConnect import DatabaseConnection
 
 class ClientHandler:
     def __init__(self, client_socket):
         self.client_socket = client_socket
         self.notification = Notification()
-        self.connection=create_connection()
+        self.connection=DatabaseConnection().get_connection()
         self.user_service = User_Service(self.connection)
 
     def handle_client(self):
@@ -41,9 +41,9 @@ class ClientHandler:
             return self.handle_role_based_request(request_parts)
 
     def verify_user(self, username, password):
-        role_name, employee_id = User.verify_employee(username, password)
+        role_name, employee_id = User.verify_employee(username,password,self.connection)
         if role_name:
-            notifications = Notification.get_notifications(employee_id)
+            notifications = Notification.get_unread_notifications(self.connection,employee_id)
             log_activity(f"User {username} with ID {employee_id} logged in as {role_name}")
             response = f"verified,{role_name},{employee_id},{json.dumps(notifications)}"
         else:
@@ -67,7 +67,7 @@ class ClientHandler:
                 response = self.user_service.execute_user_command(command, employee_id, args)
             else:
                 response = "Invalid role!"
-            if response == "Exit":
+            if response == "Logout":
                 log_activity(f"User with ID {employee_id} logged out of the system")
         else:
             response = self.display_menu(role_name, employee_id)

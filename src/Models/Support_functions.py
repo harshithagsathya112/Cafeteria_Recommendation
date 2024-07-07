@@ -1,6 +1,6 @@
-from Database.SQLConnect import connection, execute_read_query
+from Database.SQLConnect import execute_read_query
 
-def get_food_name(food_item_id):
+def get_food_name(connection,food_item_id):
         query = f"SELECT ItemName FROM fooditem WHERE FoodItemID = {food_item_id}"
         result = execute_read_query(connection, query)
         return result[0][0] 
@@ -27,7 +27,7 @@ def display_menu(role_name):
             "6. View Rollout menu",
             "7. View Recommendation",
             "8. View Discard menu List",
-            "9. View reposnse for quqestions",
+            "9. View reposnse for questions",
             "10. Logout"
         ]
     elif role_name == 'Employee':

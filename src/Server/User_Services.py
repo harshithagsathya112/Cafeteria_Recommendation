@@ -2,13 +2,12 @@ import os
 import sys
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
-from Models.chef import view_rolled_out_menu_for_today
 from Models.UserLogin import User
-from Database.SQLConnect import create_connection
 from Models.Recommendation_System import RecommendationEngine
 from Models.Admin import Admin
 from Models.chef import Chef
 from Models.Employee import Employee
+from Models.Menu import MenuManager
 import logging
 logging.basicConfig(filename='user_activity.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
@@ -17,7 +16,7 @@ class User_Service:
         self.connection = connection
 
     def execute_admin_command(self, choice, args):
-        admin = Admin()
+        admin = Admin(self.connection)
         match choice:
             case '1':
                 foodname, foodprice = args
@@ -67,7 +66,7 @@ class User_Service:
                 return "Invalid choice!"
 
     def execute_chef_command(self, choice, employee_id, args):
-        chef = Chef(None, employee_id, None, None, None)
+        chef = Chef(None, employee_id, None, None, None,self.connection)
         engine = RecommendationEngine(self.connection)
         match choice:
             case '1':
@@ -76,7 +75,7 @@ class User_Service:
                     food_item_id = int(food_item_id)
                     if not self.food_item_exists(food_item_id):
                         raise ValueError(f"Food item ID {food_item_id} does not exist.")
-                    return chef.roll_out_menu(self.connection, meal_type, food_item_id)
+                    return chef.roll_out_menu(meal_type, food_item_id)
                 except Exception as e:
                     return f"Error rolling out menu: {e}"
             case '2':
@@ -84,18 +83,19 @@ class User_Service:
             case '3':
                 return chef.generate_report(self.connection)
             case '4':
-                return chef.Fetch_Food_Items(self.connection)
+                return chef.fetch_food_items(self.connection)
             case '5':
                 meal_type, food_item_id = args
                 try:
                     food_item_id = int(food_item_id)
                     if not self.food_item_exists(food_item_id):
                         raise ValueError(f"Food item ID {food_item_id} does not exist.")
-                    return chef.send_final_menu(self.connection, meal_type, food_item_id)
+                    return chef.send_final_menu(meal_type, food_item_id)
                 except Exception as e:
                     return f"Error sending final menu: {e}"
             case '6':
-                return view_rolled_out_menu_for_today(self.connection, chef.employee_id)
+                Menu= MenuManager(self.connection)
+                return Menu.view_rolled_out_menu_for_today(chef.employee_id)
             case '7':
                 no_items_recommended = int(args[0])
                 return engine.recommend_items(top_n=no_items_recommended)
@@ -110,7 +110,7 @@ class User_Service:
                 output += "Enter --Feedback-- to send Feedback request to users\n"
                 return output
             case 'Remove':
-                admin = Admin()
+                admin = Admin(self.connection)
                 food_item_id_to_remove = int(args[0])
                 admin.delete_food_item(food_item_id_to_remove)
                 return "Food Item is deleted successfully"
@@ -126,6 +126,7 @@ class User_Service:
                 return "Invalid choice!"
 
     def execute_user_command(self, choice, employee_id, args):
+        employee=Employee(employee_id)
         match choice:
             case '1':
                 return Employee.view_menu(self.connection, employee_id, availability_only=True)
@@ -149,31 +150,31 @@ class User_Service:
                     rating = float(rating)
                     if rating < 0 or rating > 5:
                         raise ValueError("Rating must be a number between 0 and 5.")
-                    return Employee.give_feedback(self.connection, employee_id, food_item_id, comment, rating)
+                    return employee.give_feedback(self.connection, employee_id, food_item_id, comment, rating)
                 except Exception as e:
                     return f"Error giving feedback: {e}"
             case '4':
-                return view_rolled_out_menu_for_today(self.connection, employee_id)
+                Menu=MenuManager(self.connection)
+                return Menu.view_rolled_out_menu_for_today(employee_id)
             case '5':
-                return Employee.get_pending_question(self.connection, employee_id)
+                return employee.get_pending_question(self.connection)
             case '6':
                 question_id, response = args
-                return Employee.submit_survey_response(self.connection, employee_id, question_id, response)
+                return employee.submit_survey_response(self.connection, question_id, response)
             case '7':
                 dietary_preference, spice_level, preferred_cuisine, sweet_tooth = args
-                return Employee.update_employee_profile(self.connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth, employee_id)
+                return employee.update_employee_profile(self.connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth)
             case '8':
                 return "Logout"
             case _:
                 return "Invalid choice!"
 
     def view_menu(self, availability_only=False):
-        return Employee.view_menu(self.connection, availability_only)
+        return Employee.view_menu(self.connection,1001,availability_only)
 
     def food_item_exists(self, food_item_id):
         try:
-            connection = create_connection()
-            cursor = connection.cursor()
+            cursor = self.connection.cursor()
             cursor.execute("SELECT COUNT(*) FROM fooditem WHERE FoodItemID = %s", (food_item_id,))
             result = cursor.fetchone()
             return result[0] > 0

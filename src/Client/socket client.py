@@ -1,12 +1,15 @@
 import socket
 import json,sys,os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'Class')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from Client.Command_processing import process_command
-from Support_functions import display_menu
-from Input_Validation import *
+from Models.Support_functions import display_menu
+from Utils.Input_Validation import *
 
 def main():
-    while True:
+    Max_Attempts=3
+    Attempts_count=0
+    
+    while Attempts_count<Max_Attempts:
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client.connect(("127.0.0.1", 9999))
         user_name = input("Enter your name: ")
@@ -18,13 +21,17 @@ def main():
 
         if response.startswith("verified"):
             _, role_name, verified_employee_id, notifications = response.split(',', 3)
+            Attempts_count=0
             notifications = json.loads(notifications)
             if notifications:
                 print("Notifications:")
                 for notification in notifications:
                     print(f"- {notification}")
         else:
-            print("Verification failed. Exiting.")
+            print("Verification failed.")
+            Attempts_count+=1
+            if(Attempts_count==Max_Attempts):
+                print("YOUR MAX ATTEMPTS HAVE OVER !!!")
             should_exit = True
             client.close()
             continue
@@ -52,8 +59,9 @@ def main():
 
             if should_exit:
                 break
-
         client.close()
+
+    client.close()
 
 if __name__ == "__main__":
     main()

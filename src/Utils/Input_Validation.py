@@ -31,3 +31,4 @@ def update_profile_input():
     sweet_tooth = 1 if sweet_tooth == 'Yes' else 0
 
     return  [dietary_preference,spice_level,preferred_cuisine,sweet_tooth,]
+
