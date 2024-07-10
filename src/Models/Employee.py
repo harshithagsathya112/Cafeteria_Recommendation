@@ -42,10 +42,10 @@ class Employee:
         try:
             cursor = connection.cursor()
             cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (employee_id,))
-            result = cursor.fetchone()
-            if not result:
+            User = cursor.fetchone()
+            if not User:
                 return "User not found."
-            user_id = result[0]
+            user_id = User[0]
             date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
 
             query = """
@@ -75,42 +75,42 @@ class Employee:
     @staticmethod
     def give_feedback(connection, employee_id,food_item_id, comment, rating):
         try:
-            result = Employee.submit_feedback(connection,employee_id, food_item_id, comment, rating)
-            return result
+            response = Employee.submit_feedback(connection,employee_id, food_item_id, comment, rating)
+            return response
         except Exception as e:
             return f"Error submitting feedback: {e}"
 
     def get_pending_question(self, connection):
         try:
-            result = self.fetch_pending_questions(connection)
-            return result
+            pending_question_data = self.fetch_pending_questions(connection)
+            return pending_question_data
         except Exception as e:
             return f"Error fetching pending questions: {e}"
 
     def submit_survey_response(self, connection, question_id, response):
         try:
-            result = self.submit_survey(connection, question_id, response)
-            return result
+            Response_while_submitting_survey = self.submit_survey(connection, question_id, response)
+            return Response_while_submitting_survey 
         except Exception as e:
             return f"Error submitting survey response: {e}"
 
     def update_profile(self, connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth):
         try:
-            result = self.update_employee_profile(connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth)
-            return result
+            Response_while_Upadating_profile = self.update_employee_profile(connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth)
+            return Response_while_Upadating_profile
         except Exception as e:
             return f"Error updating profile: {e}"
 
     def fetch_role_name(self, connection):
-        result=User.get_role_from_employeeid(self.employee_id)
-        return result if result else None
+        employee_role=User.get_role_from_employeeid(self.employee_id)
+        return employee_role if employee_role else None
     
     @staticmethod
     def submit_feedback(connection,employee_id,food_item_id, comment, rating):
         cursor = connection.cursor()
         cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (employee_id,))
-        result = cursor.fetchone()
-        user_id=result[0]
+        User_Details = cursor.fetchone()
+        user_id=User_Details[0]
         
         if not user_id:
             return "User not found."
@@ -169,8 +169,8 @@ class Employee:
     def get_user_id(self, connection):
         cursor = connection.cursor()
         cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (self.employee_id,))
-        result = cursor.fetchone()
-        return result[0] if result else None
+        User_Details = cursor.fetchone()
+        return User_Details [0] if User_Details  else None
 
     def fetch_today_menu(self, connection, date):
         cursor = connection.cursor()

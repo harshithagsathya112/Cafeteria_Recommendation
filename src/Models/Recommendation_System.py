@@ -21,10 +21,10 @@ class RecommendationEngine:
     def load_sentiment_words(self, sentiment_words_file):
         positive_words = []
         negative_words = []
-        with open(sentiment_words_file, 'r') as file:
-            lines = file.readlines()
+        with open(sentiment_words_file, 'r') as sentiment_data_file:
+            sentiment_file_lines = sentiment_data_file.readlines()
             current_list = None
-            for line in lines:
+            for line in sentiment_file_lines:
                 line = line.strip()
                 if line == "positive:":
                     current_list = positive_words
@@ -54,18 +54,18 @@ class RecommendationEngine:
             return "Neutral"
 
     def analyze_feedback(self, food_item_id):
-        query = f"""
+        query_to_fetch_feedback_of_fooditem = f"""
         SELECT f.Comment, f.Rating, fi.ItemName
         FROM feedback f
         JOIN fooditem fi ON f.FoodItemID = fi.FoodItemID
         WHERE f.FoodItemID = {food_item_id}
         """
-        feedbacks = execute_read_query(self.connection, query)
+        feedbacks = execute_read_query(self.connection, query_to_fetch_feedback_of_fooditem )
 
         if not feedbacks:
-            query = f"SELECT ItemName FROM fooditem WHERE FoodItemID = {food_item_id}"
-            result = execute_read_query(self.connection, query)
-            food_name = result[0][0] if result else "Unknown Food Item"
+            query_to_fetch_foodItem_name = f"SELECT ItemName FROM fooditem WHERE FoodItemID = {food_item_id}"
+            FoodItem_details = execute_read_query(self.connection, query_to_fetch_foodItem_name)
+            food_name = FoodItem_details[0][0] if FoodItem_details else "Unknown Food Item"
             return food_name, 0, "Neutral"
 
         total_rating = 0
@@ -87,16 +87,16 @@ class RecommendationEngine:
 
     def count_votes(self, food_item_id):
         previous_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
-        query = f"""
+        query_to_fetch_votes_fooditems = f"""
         SELECT COUNT(*) FROM votetable
         WHERE FoodItemID = {food_item_id} AND DATE(VoteDate) = '{previous_date}'
         """
-        total_votes = execute_read_query(self.connection, query)
+        total_votes = execute_read_query(self.connection, query_to_fetch_votes_fooditems)
         return total_votes[0][0] if total_votes else 0
 
     def recommend_items(self, top_n=3):
-        query = "SELECT FoodItemID FROM fooditem"
-        food_items = execute_read_query(self.connection, query)
+        Query_fetch_fooditems = "SELECT FoodItemID FROM fooditem"
+        food_items = execute_read_query(self.connection, Query_fetch_fooditems)
 
         recommendations = []
 
@@ -115,8 +115,8 @@ class RecommendationEngine:
         return result
 
     def generate_discard_list(self):
-        query = "SELECT FoodItemID FROM fooditem"
-        food_items = execute_read_query(self.connection, query)
+        Query_fetch_fooditems = "SELECT FoodItemID FROM fooditem"
+        food_items = execute_read_query(self.connection, Query_fetch_fooditems)
 
         discard_list = []
 

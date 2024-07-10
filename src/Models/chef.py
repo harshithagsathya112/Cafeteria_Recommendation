@@ -32,9 +32,9 @@ class Chef:
     def view_feedback(self, connection):
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM feedback")
-        result = cursor.fetchall()
+        Feedback_records = cursor.fetchall()
         feedback = "Feedback:\n"
-        for row in result:
+        for row in Feedback_records:
             feedback += f"Feedback ID: {row[0]}, User ID: {row[1]}, Comment: {row[2]}, Rating: {row[3]}, Date: {row[4]}, Food Item ID: {row[5]}\n"
         return feedback
 
@@ -66,15 +66,15 @@ class Chef:
                 ORDER BY q.date_sent DESC, q.question_id ASC
             """
             cursor.execute(query)
-            results = cursor.fetchall()
+            Feedback_Questions = cursor.fetchall()
 
-            if not results:
+            if not Feedback_Questions:
                 return "No feedback available."
 
             formatted_feedback = ""
             current_question_id = None
 
-            for question_id, question_text, response in results:
+            for question_id, question_text, response in Feedback_Questions:
                 if question_id != current_question_id:
                     if current_question_id is not None:
                         formatted_feedback += "\n"

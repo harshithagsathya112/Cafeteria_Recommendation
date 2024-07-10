@@ -1,9 +1,9 @@
 from Database.SQLConnect import execute_read_query
 
 def get_food_name(connection,food_item_id):
-        query = f"SELECT ItemName FROM fooditem WHERE FoodItemID = {food_item_id}"
-        result = execute_read_query(connection, query)
-        return result[0][0] 
+        Query_fetch_fooditemName = f"SELECT ItemName FROM fooditem WHERE FoodItemID = {food_item_id}"
+        FoodItem = execute_read_query(connection, Query_fetch_fooditemName)
+        return FoodItem[0][0] 
 
 def display_menu(role_name):
     menu = []

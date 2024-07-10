@@ -26,8 +26,8 @@ class User:
 
     @staticmethod
     def verify_employee(name, employeeid,connection):
-        query = f"SELECT UserID FROM user WHERE name='{name}' AND EmployeeID='{employeeid}'"
-        user = execute_read_query(connection, query)
+        query_to_fetch_User = f"SELECT UserID FROM user WHERE name='{name}' AND EmployeeID='{employeeid}'"
+        user = execute_read_query(connection, query_to_fetch_User )
         if user:
             user_instance = User(name, employeeid)
             role = user_instance.get_role_from_employeeid(employeeid,connection)

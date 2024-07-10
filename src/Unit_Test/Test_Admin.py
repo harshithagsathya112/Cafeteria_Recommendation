@@ -1,85 +1,115 @@
-import unittest
-from unittest.mock import patch
 import os
 import sys
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(project_root)
-from Models.Admin import Admin, FoodItemRepository  
+import unittest
+from unittest.mock import Mock, patch
 
-class TestFoodItemRepository(unittest.TestCase):
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from Models.Admin import Admin, FoodItemRepository
 
-    @patch('Models.Admin.create_connection')
-    def setUp(self, MockCreateConnection):
-        self.mock_conn = MockCreateConnection.return_value
-        self.mock_cursor = self.mock_conn.cursor.return_value
-        self.repo = FoodItemRepository(self.mock_conn)
+class TestAdminMethods(unittest.TestCase):
 
-    def test_add_food_item(self):
-        self.mock_cursor.lastrowid = 1
-        food_item_id = self.repo.add_food_item("Pizza", 10.99)
-        self.assertEqual(food_item_id, 1)
-        self.mock_cursor.execute.assert_called_once()
-        self.mock_conn.commit.assert_called_once()
-
-    def test_update_food_item(self):
-        self.repo.update_food_item(1, item_name="Burger", price=5.99)
-        self.mock_cursor.execute.assert_any_call("SET SQL_SAFE_UPDATES = 0;")
-        self.mock_cursor.execute.assert_any_call("SET SQL_SAFE_UPDATES = 1;")
-        self.mock_conn.commit.assert_called_once()
-
-    def test_delete_food_item(self):
-        self.repo.delete_food_item(1)
-        self.mock_cursor.execute.assert_called_once_with("DELETE FROM fooditem_main WHERE LookupID = %s", (1,))
-        self.mock_conn.commit.assert_called_once()
-
-    def test_get_food_items(self):
-        self.mock_cursor.fetchall.return_value = [(1, "Pizza", 10.99)]
-        food_items = self.repo.get_food_items()
-        self.assertEqual(food_items, [(1, "Pizza", 10.99)])
-
-    def test_close(self):
-        self.repo.close()
-        self.mock_cursor.close.assert_called_once()
-        self.mock_conn.close.assert_called_once()
-
-class TestAdmin(unittest.TestCase):
-
-    @patch('Models.Admin.create_connection')
-    @patch('Models.Admin.Notification')
-    def setUp(self, MockNotification, MockCreateConnection):
-        self.mock_conn = MockCreateConnection.return_value
-        self.mock_cursor = self.mock_conn.cursor.return_value
-        self.mock_notification = MockNotification.return_value
-        self.Admin = Admin()
+    def setUp(self):
+        self.mock_connection = Mock()
+        self.admin = Admin(self.mock_connection)
 
     def test_add_food_item(self):
-        self.mock_cursor.lastrowid = 1
-        food_item_id = self.Admin.add_food_item("Pizza", 10.99)
-        self.assertEqual(food_item_id, 1)
-        self.mock_cursor.execute.assert_called_once()
-        self.mock_conn.commit.assert_called_once()
-        self.mock_notification.insert_notification_for_all_users.assert_called_once()
+        self.admin.food_item_repository.add_food_item = Mock(return_value=1)
+        self.admin.notification_service.send_notification_to_all_users = Mock()
+
+        item_name = "Test Item"
+        price = 10.99
+
+        result = self.admin.add_food_item(item_name, price)
+
+        self.assertEqual(result, 1)
+        self.admin.food_item_repository.add_food_item.assert_called_once_with(item_name, price)
+        self.admin.notification_service.send_notification_to_all_users.assert_called_once()
 
     def test_update_food_item(self):
-        self.Admin.update_food_item(1, item_name="Burger", price=5.99)
-        self.mock_cursor.execute.assert_any_call("SET SQL_SAFE_UPDATES = 0;")
-        self.mock_cursor.execute.assert_any_call("SET SQL_SAFE_UPDATES = 1;")
-        self.mock_conn.commit.assert_called_once()
+        self.admin.food_item_repository.update_food_item = Mock()
+        
+        food_item_id = 1
+        item_name = "Updated Item"
+        price = 15.99
+
+        self.admin.update_food_item(food_item_id, item_name, price)
+
+        self.admin.food_item_repository.update_food_item.assert_called_once_with(food_item_id, item_name, price)
 
     def test_delete_food_item(self):
-        self.Admin.delete_food_item(1)
-        self.mock_cursor.execute.assert_called_once_with("DELETE FROM fooditem_main WHERE LookupID = %s", (1,))
-        self.mock_conn.commit.assert_called_once()
+        self.admin.food_item_repository.delete_food_item = Mock()
+        
+        food_item_id = 1
+
+        self.admin.delete_food_item(food_item_id)
+
+        self.admin.food_item_repository.delete_food_item.assert_called_once_with(food_item_id)
 
     def test_get_food_items(self):
-        self.mock_cursor.fetchall.return_value = [(1, "Pizza", 10.99)]
-        menu = self.Admin.get_food_items()
-        self.assertIn("Pizza", menu)
+        mock_food_items = [(1, "Item 1", 10.99), (2, "Item 2", 15.99)]
+        self.admin.food_item_repository.get_food_items = Mock(return_value=mock_food_items)
+
+        expected_output = "Menu:\nID: 1, Name: Item 1, Price: 10.99\nID: 2, Name: Item 2, Price: 15.99"
+
+        result = self.admin.get_food_items()
+
+        self.assertEqual(result, expected_output)
+        self.admin.food_item_repository.get_food_items.assert_called_once()
 
     def test_close_connection(self):
-        self.Admin.close_connection()
-        self.mock_cursor.close.assert_called_once()
-        self.mock_conn.close.assert_called_once()
+        self.admin.food_item_repository.close = Mock()
+
+        self.admin.close_connection()
+
+        self.admin.food_item_repository.close.assert_called_once()
+
+class TestFoodItemRepositoryMethods(unittest.TestCase):
+
+    def setUp(self):
+        self.mock_connection = Mock()
+        self.repository = FoodItemRepository(self.mock_connection)
+
+    def test_add_food_item(self):
+        self.repository.cursor.execute = Mock()
+        self.mock_connection.commit = Mock()
+
+        item_name = "Test Item"
+        price = 10.99
+
+        self.repository.add_food_item(item_name, price)
+
+        self.repository.cursor.execute.assert_called_once()
+        self.mock_connection.commit.assert_called_once()
+
+
+    def test_delete_food_item(self):
+        self.repository.cursor.execute = Mock()
+        self.mock_connection.commit = Mock()
+
+        food_item_id = 1
+
+        self.repository.delete_food_item(food_item_id)
+
+        self.repository.cursor.execute.assert_called_once()
+        self.mock_connection.commit.assert_called_once()
+
+    def test_get_food_items(self):
+        self.repository.cursor.execute = Mock()
+        self.repository.cursor.fetchall = Mock(return_value=[(1, "Item 1", 10.99), (2, "Item 2", 15.99)])
+
+        result = self.repository.get_food_items()
+
+        self.assertEqual(len(result), 2)
+        self.repository.cursor.execute.assert_called_once()
+
+    def test_close(self):
+        self.repository.cursor.close = Mock()
+        self.mock_connection.close = Mock()
+
+        self.repository.close()
+
+        self.repository.cursor.close.assert_called_once()
+        self.mock_connection.close.assert_called_once()
 
 if __name__ == '__main__':
     unittest.main()

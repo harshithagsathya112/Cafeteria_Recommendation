@@ -71,13 +71,13 @@ class MenuManager:
 
     def fetch_rolled_out_menu_items(self, date):
         cursor = self.connection.cursor()
-        query = """
+        query_for_fetching_rolledout_menu = """
             SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType, fooditem.dietary_type, fooditem.spice_level, fooditem.cuisine, fooditem.is_sweet
             FROM menu
             JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
             WHERE menu.Date = %s
         """
-        cursor.execute(query, (date,))
+        cursor.execute(query_for_fetching_rolledout_menu, (date,))
         return cursor.fetchall()
     
     def update_menu_and_availability_status(self, meal_type, food_item_id):
@@ -89,9 +89,9 @@ class MenuManager:
             cursor = self.connection.cursor()
 
             cursor.execute("SELECT COUNT(*) FROM menu WHERE Date = %s AND FoodItemID = %s", (previous_date, food_item_id))
-            count = cursor.fetchone()[0]
+            count_fooditem_availability = cursor.fetchone()[0]
 
-            if count == 0:
+            if count_fooditem_availability == 0:
                 cursor.execute("INSERT INTO menu (Date, MealType, FoodItemID, FinalFlag) VALUES (%s, %s, %s, %s)",
                                (previous_date, meal_type, food_item_id, 1))
             else:
@@ -108,8 +108,8 @@ class MenuManager:
 
                 cursor.execute("SELECT ItemName FROM fooditem WHERE FoodItemID = %s", (item[0],))
                 food_name = cursor.fetchone()[0]
-                message = f"{food_name} is now available."
-                notification.send_notification_to_all_users(self.connection, message)
+                User_Notification_message = f"{food_name} is now available."
+                notification.send_notification_to_all_users(self.connection, User_Notification_message)
 
             cursor.execute("UPDATE fooditem SET AvailabilityStatus = %s WHERE FoodItemID NOT IN (SELECT FoodItemID FROM menu WHERE Date = %s AND FinalFlag = 1)", 
                            (0, previous_date))
@@ -136,14 +136,14 @@ class MenuManager:
         return sorted(menu_items, key=sort_key, reverse=True)
 
     def format_menu_output(self, menu_items):
-        menu_output = ["Rolled Out Menu for Today:"]
+        Formated_menu_items = ["Rolled Out Menu for Today:"]
         for item in menu_items:
-            menu_output.append(f"ID: {item[0]}, Name: {item[1]}, Price: {item[2]}, Meal Type: {item[3]}")
-        return "\n".join(menu_output)
+            Formated_menu_items.append(f"ID: {item[0]}, Name: {item[1]}, Price: {item[2]}, Meal Type: {item[3]}")
+        return "\n".join(Formated_menu_items)
 
     def notify_users_about_menu(self, food_name):
         notification = Notification()
-        message = f"{food_name} has been added to the rolled-out menu."
-        notification.send_notification_to_all_users(self.connection,message)
+        Notification_message_for_user = f"{food_name} has been added to the rolled-out menu."
+        notification.send_notification_to_all_users(self.connection,Notification_message_for_user)
 
     

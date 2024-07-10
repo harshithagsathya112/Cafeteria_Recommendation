@@ -176,8 +176,8 @@ class User_Service:
         try:
             cursor = self.connection.cursor()
             cursor.execute("SELECT COUNT(*) FROM fooditem WHERE FoodItemID = %s", (food_item_id,))
-            result = cursor.fetchone()
-            return result[0] > 0
+            fooditem = cursor.fetchone()
+            return fooditem[0] > 0
         except Exception as e:
             print(f"Error checking food item existence: {e}")
             return False
