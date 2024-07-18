@@ -6,6 +6,10 @@ from Models.Menu import MenuManager
 from Models.UserLogin import User
 from Database.SQLConnect import execute_read_query
 
+MENU_DATE_FORMAT = '%Y-%m-%d'
+SWEET_TOOTH_YES=1
+SWEET_TOOTH_NO=0
+
 class Employee:
     def __init__(self, employee_id):
         self.employee_id = employee_id
@@ -16,10 +20,11 @@ class Employee:
             return role_name
         except Exception as e:
             return f"Error fetching role: {e}"
+
     @staticmethod
     def view_menu(connection, employee_id=None, availability_only=False):
         try:
-            Menu=MenuManager(connection)
+            menu_manager = MenuManager(connection)
             cursor = connection.cursor()
             cursor.execute("SELECT dietary_preference, spice_level, preferred_cuisine, sweet_tooth FROM user WHERE EmployeeID = %s", (employee_id,))
             user = cursor.fetchone()
@@ -31,22 +36,21 @@ class Employee:
             else:
                 cursor.execute("SELECT * FROM fooditem")
             food_items = cursor.fetchall()
-            food_items=Menu.sort_menu_items(food_items, dietary_preference, spice_level, preferred_cuisine, sweet_tooth)
-
-            return Menu.format_menu_output(food_items)
+            food_items = menu_manager.sort_menu_items(food_items, dietary_preference, spice_level, preferred_cuisine, sweet_tooth)
+            return menu_manager.format_menu_output(food_items)
         except Exception as e:
             return f"Error fetching menu: {e}"
-        
+
     @staticmethod
     def select_food_item(connection, employee_id, food_item_id):
         try:
             cursor = connection.cursor()
             cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (employee_id,))
-            User = cursor.fetchone()
-            if not User:
+            user = cursor.fetchone()
+            if not user:
                 return "User not found."
-            user_id = User[0]
-            date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+            user_id = user[0]
+            date = (datetime.today() - timedelta(days=1)).strftime(MENU_DATE_FORMAT)
 
             query = """
             SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType
@@ -66,16 +70,17 @@ class Employee:
             Employee.record_vote(cursor, user_id, date, food_item_id)
             connection.commit()
             return "Your food item selection has been recorded."
-    
+
         except Exception as e:
             return f"Error selecting food item: {e}"
-    
+
         finally:
             cursor.close()
+
     @staticmethod
-    def give_feedback(connection, employee_id,food_item_id, comment, rating):
+    def give_feedback(connection, employee_id, food_item_id, comment, rating):
         try:
-            response = Employee.submit_feedback(connection,employee_id, food_item_id, comment, rating)
+            response = Employee.submit_feedback(connection, employee_id, food_item_id, comment, rating)
             return response
         except Exception as e:
             return f"Error submitting feedback: {e}"
@@ -89,35 +94,35 @@ class Employee:
 
     def submit_survey_response(self, connection, question_id, response):
         try:
-            Response_while_submitting_survey = self.submit_survey(connection, question_id, response)
-            return Response_while_submitting_survey 
+            response = self.submit_survey(connection, question_id, response)
+            return response
         except Exception as e:
             return f"Error submitting survey response: {e}"
 
     def update_profile(self, connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth):
         try:
-            Response_while_Upadating_profile = self.update_employee_profile(connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth)
-            return Response_while_Upadating_profile
+            response = self.update_employee_profile(connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth)
+            return response
         except Exception as e:
             return f"Error updating profile: {e}"
 
     def fetch_role_name(self, connection):
-        employee_role=User.get_role_from_employeeid(self.employee_id)
+        employee_role = User.get_role_from_employeeid(self.employee_id, connection)
         return employee_role if employee_role else None
-    
+
     @staticmethod
-    def submit_feedback(connection,employee_id,food_item_id, comment, rating):
+    def submit_feedback(connection, employee_id, food_item_id, comment, rating):
         cursor = connection.cursor()
         cursor.execute("SELECT UserID FROM user WHERE EmployeeID = %s", (employee_id,))
-        User_Details = cursor.fetchone()
-        user_id=User_Details[0]
-        
+        user_details = cursor.fetchone()
+        user_id = user_details[0] if user_details else None
+
         if not user_id:
             return "User not found."
 
         cursor.execute("""
-            INSERT INTO feedback (UserID, Comment, Rating, FeedbackDate, FoodItemID) 
-            VALUES (%s, %s, %s, CURDATE(), %s)
+        INSERT INTO feedback (UserID, Comment, Rating, FeedbackDate, FoodItemID) 
+        VALUES (%s, %s, %s, CURDATE(), %s)
         """, (user_id, comment, rating, food_item_id))
         connection.commit()
         return "Feedback submitted successfully."
@@ -129,11 +134,11 @@ class Employee:
             return "User not found."
 
         cursor.execute("""
-            SELECT q.question_id, q.question
-            FROM question q
-            LEFT JOIN survey s ON q.question_id = s.question_id AND s.UserID = %s
-            WHERE s.question_id IS NULL
-            ORDER BY q.date_sent DESC
+        SELECT q.question_id, q.question
+        FROM question q
+        LEFT JOIN survey s ON q.question_id = s.question_id AND s.UserID = %s
+        WHERE s.question_id IS NULL
+        ORDER BY q.date_sent DESC
         """, (user_id,))
         questions = cursor.fetchall()
 
@@ -150,18 +155,19 @@ class Employee:
             return "User not found."
 
         cursor.execute("""
-            INSERT INTO survey (UserID, Question_id, response) 
-            VALUES (%s, %s, %s)
+        INSERT INTO survey (UserID, Question_id, response) 
+        VALUES (%s, %s, %s)
         """, (user_id, question_id, response))
         connection.commit()
         return "Survey response submitted successfully."
 
     def update_employee_profile(self, connection, dietary_preference, spice_level, preferred_cuisine, sweet_tooth):
         cursor = connection.cursor()
+        sweet_tooth = SWEET_TOOTH_YES if sweet_tooth else SWEET_TOOTH_YES
         cursor.execute("""
-            UPDATE user
-            SET dietary_preference = %s, spice_level = %s, preferred_cuisine = %s, sweet_tooth = %s
-            WHERE EmployeeID = %s
+        UPDATE user
+        SET dietary_preference = %s, spice_level = %s, preferred_cuisine = %s, sweet_tooth = %s
+        WHERE EmployeeID = %s
         """, (dietary_preference, spice_level, preferred_cuisine, sweet_tooth, self.employee_id))
         connection.commit()
         return "Profile updated successfully."
@@ -175,13 +181,13 @@ class Employee:
     def fetch_today_menu(self, connection, date):
         cursor = connection.cursor()
         cursor.execute("""
-            SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType
-            FROM menu
-            JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
-            WHERE menu.Date = %s
+        SELECT menu.FoodItemID, fooditem.ItemName, fooditem.Price, menu.MealType
+        FROM menu
+        JOIN fooditem ON menu.FoodItemID = fooditem.FoodItemID
+        WHERE menu.Date = %s
         """, (date,))
         return cursor.fetchall()
-    
+
     @staticmethod
     def user_already_voted(cursor, user_id, date, food_item_id):
         cursor.execute("""
@@ -194,6 +200,7 @@ class Employee:
     @staticmethod
     def record_vote(cursor, user_id, date, food_item_id):
         cursor.execute("""
-            INSERT INTO votetable (VoteDate, FoodItemID, UserID) 
-            VALUES (%s, %s, %s)
+        INSERT INTO votetable (VoteDate, FoodItemID, UserID) 
+        VALUES (%s, %s, %s)
         """, (date, food_item_id, user_id))
+

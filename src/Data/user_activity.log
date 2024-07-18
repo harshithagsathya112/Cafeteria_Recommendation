@@ -15,3 +15,313 @@
 2024-07-10 23:49:49,536 - User with ID 1003 logged out of the system
 2024-07-10 23:49:57,081 - User Sweety with ID 1004 logged in as Employee
 2024-07-10 23:49:59,120 - User with ID 1004 logged out of the system
+2024-07-11 00:20:56,796 - package: mysql.connector.plugins
+2024-07-11 00:20:56,797 - plugin_name: caching_sha2_password
+2024-07-11 00:20:56,797 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-11 00:20:56,800 - package: mysql.connector.plugins
+2024-07-11 00:20:56,800 - plugin_name: mysql_native_password
+2024-07-11 00:20:56,800 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-11 00:21:10,814 - User Sweety with ID 1004 logged in as Employee
+2024-07-11 00:21:38,824 - User with ID 1004 logged out of the system
+2024-07-11 00:21:42,807 - User Harsha with ID 1001 logged in as Chef
+2024-07-11 00:21:53,572 - User with ID 1001 logged out of the system
+2024-07-11 00:22:00,345 - User Sweety with ID 1004 logged in as Employee
+2024-07-11 00:24:08,675 - User with ID 1004 logged out of the system
+2024-07-11 00:24:20,618 - User Naga with ID 1002 logged in as Admin
+2024-07-11 00:25:10,279 - User logged out of the system
+2024-07-11 00:25:10,280 - User with ID 1002 logged out of the system
+2024-07-14 20:59:38,002 - package: mysql.connector.plugins
+2024-07-14 20:59:38,002 - plugin_name: caching_sha2_password
+2024-07-14 20:59:38,003 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-14 20:59:38,018 - package: mysql.connector.plugins
+2024-07-14 20:59:38,018 - plugin_name: mysql_native_password
+2024-07-14 20:59:38,026 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-14 20:59:45,730 - User Naga with ID 1002 logged in as Admin
+2024-07-14 21:01:11,452 - User logged out of the system
+2024-07-14 21:01:11,454 - User with ID 1002 logged out of the system
+2024-07-14 21:01:30,822 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:03:35,337 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:06:36,463 - User with ID 1001 logged out of the system
+2024-07-14 21:06:50,818 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:07:30,748 - User with ID 1001 logged out of the system
+2024-07-14 21:07:38,110 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:08:13,619 - User with ID 1001 logged out of the system
+2024-07-14 21:08:17,141 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:08:30,874 - User with ID 1001 logged out of the system
+2024-07-14 21:08:40,401 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:09:00,129 - User with ID 1001 logged out of the system
+2024-07-14 21:09:12,104 - User Tej with ID 1003 logged in as Employee
+2024-07-14 21:12:08,268 - User with ID 1003 logged out of the system
+2024-07-14 21:12:12,766 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:14:25,146 - User with ID 1001 logged out of the system
+2024-07-14 21:14:31,504 - User Naga with ID 1002 logged in as Admin
+2024-07-14 21:14:55,943 - User logged out of the system
+2024-07-14 21:14:55,944 - User with ID 1002 logged out of the system
+2024-07-14 21:15:02,588 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:15:34,802 - User with ID 1001 logged out of the system
+2024-07-14 21:15:38,000 - User Tej with ID 1003 logged in as Employee
+2024-07-14 21:19:47,555 - User with ID 1003 logged out of the system
+2024-07-14 21:19:57,563 - User Naga with ID 1002 logged in as Admin
+2024-07-14 21:20:08,158 - User logged out of the system
+2024-07-14 21:20:08,159 - User with ID 1002 logged out of the system
+2024-07-14 21:20:13,984 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:27:59,808 - hi_testing
+2024-07-14 21:28:37,237 - package: mysql.connector.plugins
+2024-07-14 21:28:37,237 - plugin_name: caching_sha2_password
+2024-07-14 21:28:37,238 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-14 21:28:37,244 - package: mysql.connector.plugins
+2024-07-14 21:28:37,244 - plugin_name: mysql_native_password
+2024-07-14 21:28:37,250 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-14 21:34:39,877 - package: mysql.connector.plugins
+2024-07-14 21:34:39,877 - plugin_name: caching_sha2_password
+2024-07-14 21:34:39,878 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-14 21:34:39,881 - package: mysql.connector.plugins
+2024-07-14 21:34:39,881 - plugin_name: mysql_native_password
+2024-07-14 21:34:39,885 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-14 21:34:44,776 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:35:22,001 - User with ID 1001 logged out of the system
+2024-07-14 21:35:28,659 - User Tej with ID 1003 logged in as Employee
+2024-07-14 21:37:38,320 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:39:41,762 - User Naga with ID 1002 logged in as Admin
+2024-07-14 21:40:42,025 - User logged out of the system
+2024-07-14 21:40:42,026 - User with ID 1002 logged out of the system
+2024-07-14 21:40:50,060 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:41:36,653 - User with ID 1001 logged out of the system
+2024-07-14 21:42:16,019 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:45:04,743 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:45:49,467 - User with ID 1001 logged out of the system
+2024-07-14 21:45:52,983 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:46:14,512 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:46:43,330 - User with ID 1001 logged out of the system
+2024-07-14 21:46:52,629 - User Tej with ID 1003 logged in as Employee
+2024-07-14 21:47:10,932 - package: mysql.connector.plugins
+2024-07-14 21:47:10,933 - plugin_name: caching_sha2_password
+2024-07-14 21:47:10,933 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-14 21:47:10,938 - package: mysql.connector.plugins
+2024-07-14 21:47:10,939 - plugin_name: mysql_native_password
+2024-07-14 21:47:10,943 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-14 21:47:13,964 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:49:51,346 - package: mysql.connector.plugins
+2024-07-14 21:49:51,346 - plugin_name: caching_sha2_password
+2024-07-14 21:49:51,346 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-14 21:49:51,352 - package: mysql.connector.plugins
+2024-07-14 21:49:51,352 - plugin_name: mysql_native_password
+2024-07-14 21:49:51,355 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-14 21:49:55,173 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:51:53,978 - package: mysql.connector.plugins
+2024-07-14 21:51:53,979 - plugin_name: caching_sha2_password
+2024-07-14 21:51:53,979 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-14 21:51:53,984 - package: mysql.connector.plugins
+2024-07-14 21:51:53,984 - plugin_name: mysql_native_password
+2024-07-14 21:51:53,990 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-14 21:51:58,418 - User Harsha with ID 1001 logged in as Chef
+2024-07-14 21:54:23,980 - package: mysql.connector.plugins
+2024-07-14 21:54:23,981 - plugin_name: caching_sha2_password
+2024-07-14 21:54:23,981 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-14 21:54:23,988 - package: mysql.connector.plugins
+2024-07-14 21:54:23,988 - plugin_name: mysql_native_password
+2024-07-14 21:54:23,991 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 08:56:58,334 - package: mysql.connector.plugins
+2024-07-15 08:56:58,334 - plugin_name: caching_sha2_password
+2024-07-15 08:56:58,334 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 08:56:58,350 - package: mysql.connector.plugins
+2024-07-15 08:56:58,350 - plugin_name: mysql_native_password
+2024-07-15 08:56:58,350 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 08:57:01,186 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 08:57:46,607 - User with ID 1001 logged out of the system
+2024-07-15 08:58:19,128 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 09:02:46,279 - User with ID 1001 logged out of the system
+2024-07-15 11:15:56,342 - package: mysql.connector.plugins
+2024-07-15 11:15:56,342 - plugin_name: caching_sha2_password
+2024-07-15 11:15:56,342 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 11:15:56,348 - package: mysql.connector.plugins
+2024-07-15 11:15:56,348 - plugin_name: mysql_native_password
+2024-07-15 11:15:56,353 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 11:44:31,821 - package: mysql.connector.plugins
+2024-07-15 11:44:31,821 - plugin_name: caching_sha2_password
+2024-07-15 11:44:31,821 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 11:44:31,823 - package: mysql.connector.plugins
+2024-07-15 11:44:31,823 - plugin_name: mysql_native_password
+2024-07-15 11:44:31,825 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 11:44:35,345 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 11:46:39,670 - package: mysql.connector.plugins
+2024-07-15 11:46:39,670 - plugin_name: caching_sha2_password
+2024-07-15 11:46:39,670 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 11:46:39,672 - package: mysql.connector.plugins
+2024-07-15 11:46:39,672 - plugin_name: mysql_native_password
+2024-07-15 11:46:39,674 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 11:47:19,059 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 11:49:31,949 - User with ID 1001 logged out of the system
+2024-07-15 11:54:04,289 - User tej with ID 1003 logged in as Employee
+2024-07-15 11:54:25,308 - User tej with ID 1003 logged in as Employee
+2024-07-15 11:54:28,489 - User with ID 1003 logged out of the system
+2024-07-15 11:54:33,199 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 11:54:35,771 - User with ID 1001 logged out of the system
+2024-07-15 11:54:39,871 - User Tej with ID 1003 logged in as Employee
+2024-07-15 11:57:22,182 - User with ID 1003 logged out of the system
+2024-07-15 11:57:31,938 - User sweety with ID 1004 logged in as Employee
+2024-07-15 12:08:44,694 - package: mysql.connector.plugins
+2024-07-15 12:08:44,694 - plugin_name: caching_sha2_password
+2024-07-15 12:08:44,694 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 12:08:44,696 - package: mysql.connector.plugins
+2024-07-15 12:08:44,696 - plugin_name: mysql_native_password
+2024-07-15 12:08:44,698 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 12:09:26,352 - User Sweety with ID 1004 logged in as Employee
+2024-07-15 12:09:35,734 - User with ID 1004 logged out of the system
+2024-07-15 12:09:43,148 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:09:48,201 - User with ID 1003 logged out of the system
+2024-07-15 12:09:54,063 - User Sweety with ID 1004 logged in as Employee
+2024-07-15 12:10:26,974 - User with ID 1004 logged out of the system
+2024-07-15 12:10:31,441 - User Valli with ID 1005 logged in as Employee
+2024-07-15 12:10:41,792 - User with ID 1005 logged out of the system
+2024-07-15 12:10:53,888 - User tej with ID 1003 logged in as Employee
+2024-07-15 12:12:57,253 - User with ID 1003 logged out of the system
+2024-07-15 12:13:07,699 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:13:17,458 - User with ID 1001 logged out of the system
+2024-07-15 12:13:21,634 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:13:43,121 - User with ID 1003 logged out of the system
+2024-07-15 12:13:53,873 - User Sweety with ID 1004 logged in as Employee
+2024-07-15 12:14:03,513 - User with ID 1004 logged out of the system
+2024-07-15 12:14:07,941 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:14:20,084 - User with ID 1001 logged out of the system
+2024-07-15 12:14:23,227 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:14:49,964 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:14:54,491 - User with ID 1003 logged out of the system
+2024-07-15 12:14:57,880 - User sweety with ID 1004 logged in as Employee
+2024-07-15 12:15:01,707 - User with ID 1004 logged out of the system
+2024-07-15 12:15:08,423 - User sweety with ID 1004 logged in as Employee
+2024-07-15 12:15:31,852 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:15:44,910 - User with ID 1003 logged out of the system
+2024-07-15 12:15:50,074 - User sweety with ID 1004 logged in as Employee
+2024-07-15 12:16:32,146 - User with ID 1004 logged out of the system
+2024-07-15 12:16:36,290 - User valli with ID 1005 logged in as Employee
+2024-07-15 12:16:45,243 - User with ID 1005 logged out of the system
+2024-07-15 12:16:49,881 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:18:16,435 - User with ID 1001 logged out of the system
+2024-07-15 12:18:20,299 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:19:14,800 - package: mysql.connector.plugins
+2024-07-15 12:19:14,800 - plugin_name: caching_sha2_password
+2024-07-15 12:19:14,800 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 12:19:14,802 - package: mysql.connector.plugins
+2024-07-15 12:19:14,802 - plugin_name: mysql_native_password
+2024-07-15 12:19:14,804 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 12:19:25,090 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:19:53,051 - User with ID 1001 logged out of the system
+2024-07-15 12:32:36,258 - package: mysql.connector.plugins
+2024-07-15 12:32:36,258 - plugin_name: caching_sha2_password
+2024-07-15 12:32:36,258 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 12:32:36,260 - package: mysql.connector.plugins
+2024-07-15 12:32:36,261 - plugin_name: mysql_native_password
+2024-07-15 12:32:36,262 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 12:32:40,363 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:34:13,467 - package: mysql.connector.plugins
+2024-07-15 12:34:13,467 - plugin_name: caching_sha2_password
+2024-07-15 12:34:13,467 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 12:34:13,469 - package: mysql.connector.plugins
+2024-07-15 12:34:13,469 - plugin_name: mysql_native_password
+2024-07-15 12:34:13,471 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 12:34:18,025 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:37:45,301 - package: mysql.connector.plugins
+2024-07-15 12:37:45,301 - plugin_name: caching_sha2_password
+2024-07-15 12:37:45,301 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 12:37:45,303 - package: mysql.connector.plugins
+2024-07-15 12:37:45,303 - plugin_name: mysql_native_password
+2024-07-15 12:37:45,304 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 12:37:48,826 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:38:03,416 - User with ID 1001 logged out of the system
+2024-07-15 12:38:06,768 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:39:29,746 - package: mysql.connector.plugins
+2024-07-15 12:39:29,747 - plugin_name: caching_sha2_password
+2024-07-15 12:39:29,747 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 12:39:29,749 - package: mysql.connector.plugins
+2024-07-15 12:39:29,749 - plugin_name: mysql_native_password
+2024-07-15 12:39:29,751 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 12:39:34,356 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:40:33,493 - User with ID 1001 logged out of the system
+2024-07-15 12:40:38,300 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:40:49,561 - User with ID 1003 logged out of the system
+2024-07-15 12:40:54,694 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:41:10,353 - User Harsha with ID 1001 logged in as Chef
+2024-07-15 12:41:52,985 - User with ID 1001 logged out of the system
+2024-07-15 12:42:18,021 - User Tej with ID 1003 logged in as Employee
+2024-07-15 12:42:49,838 - package: mysql.connector.plugins
+2024-07-15 12:42:49,839 - plugin_name: caching_sha2_password
+2024-07-15 12:42:49,839 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-15 12:42:49,840 - package: mysql.connector.plugins
+2024-07-15 12:42:49,841 - plugin_name: mysql_native_password
+2024-07-15 12:42:49,842 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-15 12:42:56,878 - User Tej with ID 1003 logged in as Employee
+2024-07-17 15:02:00,979 - package: mysql.connector.plugins
+2024-07-17 15:02:00,980 - plugin_name: caching_sha2_password
+2024-07-17 15:02:00,981 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-17 15:02:00,986 - package: mysql.connector.plugins
+2024-07-17 15:02:00,986 - plugin_name: mysql_native_password
+2024-07-17 15:02:00,991 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-17 15:21:17,864 - package: mysql.connector.plugins
+2024-07-17 15:21:17,865 - plugin_name: caching_sha2_password
+2024-07-17 15:21:17,865 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-17 15:21:17,870 - package: mysql.connector.plugins
+2024-07-17 15:21:17,871 - plugin_name: mysql_native_password
+2024-07-17 15:21:17,874 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-17 15:21:22,158 - User Harsha with ID 1001 logged in as Chef
+2024-07-17 15:39:13,544 - User with ID 1001 logged out of the system
+2024-07-17 15:39:17,069 - User harsha with ID 1001 logged in as Chef
+2024-07-17 15:41:14,031 - User with ID 1001 logged out of the system
+2024-07-17 15:41:20,754 - User Tej with ID 1003 logged in as Employee
+2024-07-17 15:45:47,744 - package: mysql.connector.plugins
+2024-07-17 15:45:47,745 - plugin_name: caching_sha2_password
+2024-07-17 15:45:47,745 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-17 15:45:47,748 - package: mysql.connector.plugins
+2024-07-17 15:45:47,749 - plugin_name: mysql_native_password
+2024-07-17 15:45:47,752 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-17 15:45:56,377 - User Tej with ID 1003 logged in as Employee
+2024-07-17 15:47:02,294 - User with ID 1003 logged out of the system
+2024-07-18 11:21:18,209 - package: mysql.connector.plugins
+2024-07-18 11:21:18,212 - plugin_name: caching_sha2_password
+2024-07-18 11:21:18,213 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-18 11:21:18,222 - package: mysql.connector.plugins
+2024-07-18 11:21:18,222 - plugin_name: mysql_native_password
+2024-07-18 11:21:18,233 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-18 11:21:25,855 - User John Doe with ID 123456 logged in as Admin
+2024-07-18 11:21:33,459 - User logged out of the system
+2024-07-18 11:21:33,460 - User with ID 123456 logged out of the system
+2024-07-18 11:22:07,892 - User John Doe with ID 123456 logged in as Admin
+2024-07-18 11:22:16,104 - User logged out of the system
+2024-07-18 11:22:16,105 - User with ID 123456 logged out of the system
+2024-07-18 11:22:32,481 - package: mysql.connector.plugins
+2024-07-18 11:22:32,482 - plugin_name: caching_sha2_password
+2024-07-18 11:22:32,482 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-18 11:22:32,487 - package: mysql.connector.plugins
+2024-07-18 11:22:32,487 - plugin_name: mysql_native_password
+2024-07-18 11:22:32,490 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-18 11:22:40,087 - User John Doe with ID 123456 logged in as Employee
+2024-07-18 11:24:44,171 - package: mysql.connector.plugins
+2024-07-18 11:24:44,172 - plugin_name: caching_sha2_password
+2024-07-18 11:24:44,173 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-18 11:24:44,177 - package: mysql.connector.plugins
+2024-07-18 11:24:44,178 - plugin_name: mysql_native_password
+2024-07-18 11:24:44,181 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-18 11:24:50,643 - User John Doe with ID 123456 logged in as Employee
+2024-07-18 11:47:24,847 - package: mysql.connector.plugins
+2024-07-18 11:47:24,848 - plugin_name: caching_sha2_password
+2024-07-18 11:47:24,849 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-18 11:47:24,852 - package: mysql.connector.plugins
+2024-07-18 11:47:24,853 - plugin_name: mysql_native_password
+2024-07-18 11:47:24,855 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-18 11:47:31,181 - User John Doe with ID 123456 logged in as Employee
+2024-07-18 11:51:10,335 - package: mysql.connector.plugins
+2024-07-18 11:51:10,337 - plugin_name: caching_sha2_password
+2024-07-18 11:51:10,337 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-18 11:51:10,341 - package: mysql.connector.plugins
+2024-07-18 11:51:10,342 - plugin_name: mysql_native_password
+2024-07-18 11:51:10,346 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-18 11:51:16,275 - User John Doe with ID 123456 logged in as Employee
+2024-07-18 12:54:53,763 - package: mysql.connector.plugins
+2024-07-18 12:54:53,765 - plugin_name: caching_sha2_password
+2024-07-18 12:54:53,765 - AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2024-07-18 12:54:53,773 - package: mysql.connector.plugins
+2024-07-18 12:54:53,773 - plugin_name: mysql_native_password
+2024-07-18 12:54:53,777 - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-07-18 12:54:56,647 - User Harsha with ID 1001 logged in as Chef
+2024-07-18 12:55:00,672 - User with ID 1001 logged out of the system
+2024-07-18 12:55:11,747 - User Sweety with ID 1004 logged in as Employee

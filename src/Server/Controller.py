@@ -40,12 +40,15 @@ class ClientHandler:
         else:
             return self.handle_role_based_request(request_parts)
 
-    def verify_user(self, username, password):
-        role_name, employee_id = User.verify_employee(username,password,self.connection)
+    def verify_user(self, username, employee_id):
+        role_name, employee_id = User.verify_employee(username,employee_id,self.connection)
         if role_name:
-            notifications = Notification.get_unread_notifications(self.connection,employee_id)
-            log_activity(f"User {username} with ID {employee_id} logged in as {role_name}")
-            response = f"verified,{role_name},{employee_id},{json.dumps(notifications)}"
+            try:
+                notifications = Notification.get_unread_notifications(self.connection,employee_id)
+                log_activity(f"User {username} with ID {employee_id} logged in as {role_name}")
+                response = f"verified,{role_name},{employee_id},{json.dumps(notifications)}"
+            except Exception as e:
+                    return f"Error getting notification: {e}"
         else:
             response = "verification_failed"
         return response

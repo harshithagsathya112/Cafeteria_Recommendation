@@ -3,6 +3,13 @@ from mysql.connector import Error
 import configparser
 import os
 
+CONFIG_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Data', 'config.ini'))
+MYSQL_SECTION = 'mysql'
+HOST_KEY = 'host'
+USER_KEY = 'user'
+PASSWORD_KEY = 'password'
+DATABASE_KEY = 'database'
+
 class DatabaseConnection:
     instance = None
 
@@ -15,14 +22,13 @@ class DatabaseConnection:
 
     def create_connection(self):
         config = configparser.ConfigParser()
-        config_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Data', 'config.ini'))
-        config.read(config_path)
+        config.read(CONFIG_FILE_PATH)
 
         db_config = {
-            'host': config['mysql']['host'],
-            'user': config['mysql']['user'],
-            'password': config['mysql']['password'],
-            'database': config['mysql']['database']
+            'host': config[MYSQL_SECTION][HOST_KEY],
+            'user': config[MYSQL_SECTION][USER_KEY],
+            'password': config[MYSQL_SECTION][PASSWORD_KEY],
+            'database': config[MYSQL_SECTION][DATABASE_KEY]
         }
 
         try:
@@ -50,38 +56,3 @@ def execute_query(connection, query):
         connection.commit()
     except Error as e:
         print(f"The error '{e}' occurred")
-
-def main():
-    db_connection = DatabaseConnection().get_connection()
-
-    if db_connection is None:
-        print("Failed to connect to the database")
-        return
-
-    create_table_query = """
-    CREATE TABLE IF NOT EXISTS user (
-        UserID INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100),
-        EmployeeID VARCHAR(100),
-        roleID INT
-    );
-    """
-    execute_query(db_connection, create_table_query)
-    print("User table created successfully.")
-
-    insert_data_query = """
-    INSERT INTO user (name, EmployeeID, roleID) VALUES
-    ('John Doe', '123456', 1),
-    ('Jane Smith', '654321', 2);
-    """
-    execute_query(db_connection, insert_data_query)
-    print("Data inserted successfully.")
-
-    select_query = "SELECT * FROM user"
-    results = execute_read_query(db_connection, select_query)
-
-    for row in results:
-        print(row)
-
-if __name__ == '__main__':
-    main()

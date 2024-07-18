@@ -1,5 +1,12 @@
 from datetime import datetime, timedelta
-import sys,os
+import sys
+import os
+
+ID_INDEX = 0
+NAME_INDEX = 1
+PRICE_INDEX = 2
+AVAILABILITY_INDEX = 3
+
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 from Models.Menu import MenuManager
@@ -11,7 +18,7 @@ class Chef:
         self.name = name
         self.role_id = role_id
         self.password = password
-        self.connection=connection
+        self.connection = connection
 
     def fetch_food_items(self, connection):
         try:
@@ -20,61 +27,66 @@ class Chef:
             food_items = cursor.fetchall()
             menu = ["Menu:"]
             for item in food_items:
-                menu.append(f"ID: {item[0]}, Name: {item[1]}, Price: {item[2]}, Available: {item[3]}")
+                menu.append(f"ID: {item[ID_INDEX]}, Name: {item[NAME_INDEX]}, Price: {item[PRICE_INDEX]}, Available: {item[AVAILABILITY_INDEX]}")
             return "\n".join(menu)
         except Exception as e:
             return f"Error fetching menu: {e}"
 
-    def roll_out_menu(self,meal_type, food_item_id):
-        menu_manager = MenuManager(self.connection) 
+    def roll_out_menu(self, meal_type, food_item_id):
+        menu_manager = MenuManager(self.connection)
         return menu_manager.roll_out_menu(meal_type, food_item_id)
 
     def view_feedback(self, connection):
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM feedback")
-        Feedback_records = cursor.fetchall()
-        feedback = "Feedback:\n"
-        for row in Feedback_records:
-            feedback += f"Feedback ID: {row[0]}, User ID: {row[1]}, Comment: {row[2]}, Rating: {row[3]}, Date: {row[4]}, Food Item ID: {row[5]}\n"
-        return feedback
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM feedback")
+            feedback_records = cursor.fetchall()
+            feedback = "Feedback:\n"
+            for row in feedback_records:
+                feedback += f"Feedback ID: {row[ID_INDEX]}, User ID: {row[1]}, Comment: {row[2]}, Rating: {row[3]}, Date: {row[4]}, Food Item ID: {row[5]}\n"
+            return feedback
+        except Exception as e:
+            return f"Error fetching feedback: {e}"
 
     def generate_report(self, connection):
-        cursor = connection.cursor()
-        cursor.execute("""
+        try:
+            cursor = connection.cursor()
+            cursor.execute("""
             SELECT FoodItemID, AVG(Rating) as avg_rating, COUNT(*) as feedback_count
             FROM feedback
             GROUP BY FoodItemID
             """)
-        result = cursor.fetchall()
-        report = "Monthly Feedback Report:\n"
-        for row in result:
-            report += f"Food Item ID: {row[0]}, Average Rating: {row[1]}, Feedback Count: {row[2]}\n"
-        return report
+            result = cursor.fetchall()
+            report = "Monthly Feedback Report:\n"
+            for row in result:
+                report += f"Food Item ID: {row[ID_INDEX]}, Average Rating: {row[1]}, Feedback Count: {row[2]}\n"
+            return report
+        except Exception as e:
+            return f"Error generating report: {e}"
 
     def send_final_menu(self, meal_type, food_item_id):
-        menu_manager = MenuManager(self.connection) 
+        menu_manager = MenuManager(self.connection)
         return menu_manager.update_menu_and_availability_status(meal_type, food_item_id)
 
     def view_feedback_for_questions(self, connection):
         try:
             cursor = connection.cursor()
-
             query = """
-                SELECT q.question_id, q.question, s.response
-                FROM question q
-                LEFT JOIN survey s ON q.question_id = s.question_id
-                ORDER BY q.date_sent DESC, q.question_id ASC
+            SELECT q.question_id, q.question, s.response
+            FROM question q
+            LEFT JOIN survey s ON q.question_id = s.question_id
+            ORDER BY q.date_sent DESC, q.question_id ASC
             """
             cursor.execute(query)
-            Feedback_Questions = cursor.fetchall()
+            feedback_questions = cursor.fetchall()
 
-            if not Feedback_Questions:
+            if not feedback_questions:
                 return "No feedback available."
 
             formatted_feedback = ""
             current_question_id = None
 
-            for question_id, question_text, response in Feedback_Questions:
+            for question_id, question_text, response in feedback_questions:
                 if question_id != current_question_id:
                     if current_question_id is not None:
                         formatted_feedback += "\n"
@@ -91,5 +103,5 @@ class Chef:
             return f"Error fetching feedback for questions: {e}"
 
     def view_rolled_out_menu_for_today(self):
-        menu_manager = MenuManager(self.connection) 
+        menu_manager = MenuManager(self.connection)
         return menu_manager.view_rolled_out_menu_for_today(self.employee_id)
